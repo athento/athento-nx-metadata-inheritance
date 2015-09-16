@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component name="nuxeo.extensions.actions" version="1.0.0">
+  <require>org.nuxeo.runtime.started</require>
+  <extension target="org.nuxeo.ecm.platform.actions.ActionService" point="actions">
+  	<action id="TAB_VIEW_FOLDERISH" link="/incl/tabs/document_view.xhtml" order="11" label="action.view.summary" icon="/icons/file.gif">
+      <category>VIEW_ACTION_LIST</category>
+      <filter id="viewTabForFolderish">
+        <rule grant="true">
+          <type>Parent</type>
+        </rule>
+      </filter>
+    </action>
+    <!-- <action id="Inherit_Button" label="Inherit metadatas" enabled="true" order="0" type="link" immediate="false" 
+    link="#{operationActionBean.doOperation('Chain_Inherit_Metadatas')}">
+      <category>DOCUMENT_UPPER_ACTION</category>
+      <filter id="filter@Inherit_Button">
+        <rule grant="true">
+          <type>Child</type>
+        </rule>
+      </filter>
+    </action> -->
+    <!-- <action id="Inherit_Button" label="Inherit metadatas" enabled="true" order="0" 
+    type="link" immediate="false" icon="/img/Icon_Inherits_Metadatas.png" link="#{operationActionBean.doOperation('Chain_Inherit_Metadatas')}">
+     <category>DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
+     <filter id="filter@Inherit_Button">
+       <rule grant="true">
+         <type>Child</type>
+       </rule>
+     </filter>
+   </action>  -->
+  </extension>
+</component>

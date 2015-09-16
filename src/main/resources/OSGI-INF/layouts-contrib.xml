@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component name="nuxeo.extensions.layouts" version="1.0.0">
+  <require>org.nuxeo.runtime.started</require>
+  <extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager" point="layouts">
+  	<layout name="layout@Child-create">
+  		<templates>
+        	<template mode="any">/layouts/fact-fact_layout_template.xhtml</template>
+      	</templates>
+      	<rows>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>title</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Child_Name</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Child_Surnames</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Child_DNI</widget>
+        	</row>
+        </rows>
+        <widget name="title" type="text">
+        <labels>
+          <label mode="any">Title</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>dc:title</field>
+        </fields>
+        <properties widgetMode="edit">
+          <property name="localize">true</property>
+          <property name="styleClass">dataInputText</property>
+          <property name="required">true</property>
+        </properties>
+      </widget>
+      <widget name="Child_Name" type="text">
+        <labels>
+          <label mode="any">Name</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Child_Schema:Child_Name</field>
+        </fields>
+      </widget>
+      <widget name="Child_Surnames" type="text">
+        <labels>
+          <label mode="any">Surnames</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Child_Schema:Child_Surnames</field>
+        </fields>
+      </widget>
+      <widget name="Child_DNI" type="text">
+        <labels>
+          <label mode="any">DNI</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Child_Schema:Child_DNI</field>
+        </fields>
+      </widget>
+  	</layout>
+    <layout name="layout@Child-edit">
+  		<templates>
+        	<template mode="any">/layouts/fact-fact_layout_template.xhtml</template>
+      	</templates>
+      	<rows>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>title</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Child_Name</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Child_Surnames</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Child_DNI</widget>
+        	</row>
+        </rows>
+        <widget name="title" type="text">
+        <labels>
+          <label mode="any">Title</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>dc:title</field>
+        </fields>
+        <properties widgetMode="edit">
+          <property name="localize">true</property>
+          <property name="styleClass">dataInputText</property>
+          <property name="required">true</property>
+        </properties>
+      </widget>
+      <widget name="Child_Name" type="text">
+        <labels>
+          <label mode="any">Name</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Child_Schema:Child_Name</field>
+        </fields>
+      </widget>
+      <widget name="Child_Surnames" type="text">
+        <labels>
+          <label mode="any">Surnames</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Child_Schema:Child_Surnames</field>
+        </fields>
+      </widget>
+      <widget name="Child_DNI" type="text">
+        <labels>
+          <label mode="any">DNI</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Child_Schema:Child_DNI</field>
+        </fields>
+      </widget>
+  	</layout>
+    <layout name="layout@Child-view">
+  		<templates>
+        	<template mode="any">/layouts/fact-fact_layout_template.xhtml</template>
+      	</templates>
+      	<rows>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>title</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Child_Name</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Child_Surnames</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Child_DNI</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_Inherited_Name</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_Inherited_Surname</widget>
+        	</row>
+        </rows>
+        <widget name="title" type="text">
+        <labels>
+          <label mode="any">Title</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>dc:title</field>
+        </fields>
+        <properties widgetMode="view">
+          <property name="localize">true</property>
+          <property name="styleClass">dataInputText</property>
+        </properties>
+      </widget>
+      <widget name="Child_Name" type="text">
+        <labels>
+          <label mode="any">Name</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Child_Schema:Child_Name</field>
+        </fields>
+      </widget>
+      <widget name="Child_Surnames" type="text">
+        <labels>
+          <label mode="any">Surnames</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Child_Schema:Child_Surnames</field>
+        </fields>
+      </widget>
+      <widget name="Child_DNI" type="text">
+        <labels>
+          <label mode="any">DNI</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Child_Schema:Child_DNI</field>
+        </fields>
+      </widget>
+      <widget name="Parent_Inherited_Name" type="text">
+        <labels>
+          <label mode="any">Parent's name</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Common_Schema:Parent_Name</field>
+        </fields>
+      </widget>
+      <widget name="Parent_Inherited_Surname" type="text">
+        <labels>
+          <label mode="any">Parent's surname</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Common_Schema:Parent_Surnames</field>
+        </fields>
+      </widget>
+  	</layout>
+      <layout name="layout@Parent-create">
+  		<templates>
+        	<template mode="any">/layouts/fact-fact_layout_template.xhtml</template>
+      	</templates>
+      	<rows>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>title</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_Name</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_Surnames</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_DNI</widget>
+        	</row>
+        </rows>
+        <widget name="title" type="text">
+        <labels>
+          <label mode="any">Title</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>dc:title</field>
+        </fields>
+        <properties widgetMode="edit">
+          <property name="localize">true</property>
+          <property name="styleClass">dataInputText</property>
+          <property name="required">true</property>
+        </properties>
+      </widget>
+      <widget name="Parent_Name" type="text">
+        <labels>
+          <label mode="any">Name</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Common_Schema:Parent_Name</field>
+        </fields>
+      </widget>
+      <widget name="Parent_Surnames" type="text">
+        <labels>
+          <label mode="any">Surnames</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Common_Schema:Parent_Surnames</field>
+        </fields>
+      </widget>
+      <widget name="Parent_DNI" type="text">
+        <labels>
+          <label mode="any">DNI</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Parent_Schema:Parent_DNI</field>
+        </fields>
+      </widget>
+  	</layout>
+  	<layout name="layout@Parent-edit">
+  		<templates>
+        	<template mode="any">/layouts/fact-fact_layout_template.xhtml</template>
+      	</templates>
+      	<rows>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>title</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_Name</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_Surnames</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_DNI</widget>
+        	</row>
+        </rows>
+        <widget name="title" type="text">
+        <labels>
+          <label mode="any">Title</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>dc:title</field>
+        </fields>
+        <properties widgetMode="edit">
+          <property name="localize">true</property>
+          <property name="styleClass">dataInputText</property>
+          <property name="required">true</property>
+        </properties>
+      </widget>
+      <widget name="Parent_Name" type="text">
+        <labels>
+          <label mode="any">Name</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Common_Schema:Parent_Name</field>
+        </fields>
+      </widget>
+      <widget name="Parent_Surnames" type="text">
+        <labels>
+          <label mode="any">Surnames</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Common_Schema:Parent_Surnames</field>
+        </fields>
+      </widget>
+      <widget name="Parent_DNI" type="text">
+        <labels>
+          <label mode="any">DNI</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Parent_Schema:Parent_DNI</field>
+        </fields>
+      </widget>
+  	</layout>
+  	<layout name="layout@Parent-view">
+  		<templates>
+        	<template mode="any">/layouts/fact-fact_layout_template.xhtml</template>
+      	</templates>
+      	<rows>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>title</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_Name</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_Surnames</widget>
+        	</row>
+        	<row>
+          		<properties mode="any">
+            		<property name="nxl_colspan_0">4</property>
+          		</properties>
+          		<widget>Parent_DNI</widget>
+        	</row>
+        </rows>
+        <widget name="title" type="text">
+        <labels>
+          <label mode="any">Title</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>dc:title</field>
+        </fields>
+        <properties widgetMode="view">
+          <property name="localize">true</property>
+          <property name="styleClass">dataInputText</property>
+        </properties>
+      </widget>
+      <widget name="Parent_Name" type="text">
+        <labels>
+          <label mode="any">Name</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Common_Schema:Parent_Name</field>
+        </fields>
+      </widget>
+      <widget name="Parent_Surnames" type="text">
+        <labels>
+          <label mode="any">Surnames</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Common_Schema:Parent_Surnames</field>
+        </fields>
+      </widget>
+      <widget name="Parent_DNI" type="text">
+        <labels>
+          <label mode="any">DNI</label>
+        </labels>
+        <translated>true</translated>
+        <fields>
+          <field>Parent_Schema:Parent_DNI</field>
+        </fields>
+      </widget>
+  	</layout>
+  </extension>
+</component>
