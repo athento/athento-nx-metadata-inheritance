@@ -1,0 +1,1 @@
+# athento-nx-metadata-inheritance
