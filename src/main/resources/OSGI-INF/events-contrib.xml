@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component name="nuxeo.extensions.events" version="1.0.0">
+  <require>org.nuxeo.runtime.started</require>
+  <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent" point="event-handlers">
+    <handler chainId="Chain_Inherit_Metadatas">
+      <event>documentCreated</event>
+      <filters>
+        <doctype>Child</doctype>
+      </filters>
+    </handler>
+    <handler chainId="Chain_Inherit_Metadatas_From_Parent">
+      <event>documentModified</event>
+      <filters>
+        <doctype>Parent</doctype>
+      </filters>
+    </handler>
+  </extension>
+</component>
