@@ -18,22 +18,14 @@ public class InheritMetadataListener implements EventListener {
     /** Log. */
     private static final Log LOG = LogFactory.getLog(InheritMetadataListener.class);
 
-    /** Ignored metadatas. */
-    private static String INGORED_METADATAS = "eservicing:category, eservicing:type, eservicing:subtype";
-
-    /** Document types to apply. */
-    private static String DOCUMENT_TYPES =  "DocumentEServicing, PhotoEServicing";
-
-
-
     /** Handler. */
     @Override
     public void handleEvent(Event event) throws ClientException {
         // Check document event context
         if (event.getContext() instanceof DocumentEventContext) {
             // FIXME: Set property in ADMINISTRATION PANEL
-            String ignoredMetadatas = Framework.getProperty("athento.metadata.inheritance.ignoredMetadatas", INGORED_METADATAS);
-            String enabledDocTypes = Framework.getProperty("athento.metadata.inheritance.enabledDoctypes", DOCUMENT_TYPES);
+            String ignoredMetadatas = Framework.getProperty("athento.metadata.inheritance.ignoredMetadatas");
+            String enabledDocTypes = Framework.getProperty("athento.metadata.inheritance.enabledDoctypes");
             DocumentModel currentDoc = ((DocumentEventContext) event.getContext()).getSourceDocument();
             if (documentMustBeApplied(currentDoc, enabledDocTypes)) {
                 // Execute operation
@@ -61,7 +53,7 @@ public class InheritMetadataListener implements EventListener {
         if (currentDoc != null && enabledDoctypes != null) {
             String [] doctypes = enabledDoctypes.split(",");
             for (String docType : doctypes) {
-                if (docType.equals(currentDoc.getType())) {
+                if (docType.trim().equals(currentDoc.getType())) {
                     return true;
                 }
             }
