@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<component name="nuxeo.extensions.operations" version="1.0.0">
-  <require>org.nuxeo.runtime.started</require>
+<component name="org.athento.nuxeo.extensions.operations" version="1.0.0">
 
-	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
-    point="operations">
-    	<operation class="org.nuxeo.operations.Inherit_Metadatas" />
-    	<operation class="org.nuxeo.operations.Inherit_Metadatas_From_Parent" />
-  	</extension>
- </component>
+    <require>org.nuxeo.runtime.started</require>
+
+    <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+               point="operations">
+        <operation class="org.nuxeo.operations.InheritMetadataOperation"/>
+    </extension>
+</component>

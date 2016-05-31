@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<component name="nuxeo.extensions.chains" version="1.0.0">
-  <require>org.nuxeo.runtime.started</require>
-	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent" point="chains">
-    	<chain id="Chain_Inherit_Metadatas">
-      		<operation id="Context.FetchDocument"/>
-      		<operation id="Inherit_Metadatas"/>
-    	</chain>
-    	<chain id="Chain_Inherit_Metadatas_From_Parent">
-      		<operation id="Context.FetchDocument"/>
-      		<operation id="Inherit_Metadatas_From_Parent"/>
-    	</chain>
-  	</extension>
- </component>
+<component name="org.athento.nuxeo.extensions.chains" version="1.0.0">
+
+    <require>org.nuxeo.runtime.started</require>
+
+    <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent" point="chains">
+
+        <chain id="ChainInheritMetadatas">
+            <operation id="Context.FetchDocument"/>
+            <operation id="InheritMetadata"/>
+        </chain>
+
+    </extension>
+
+
+</component>
