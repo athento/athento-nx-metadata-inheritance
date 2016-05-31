@@ -9,6 +9,7 @@
         <chain id="ChainInheritMetadatas">
             <operation id="Context.FetchDocument"/>
             <operation id="InheritMetadata"/>
+            <operation id="Document.Save" />
         </chain>
 
     </extension>

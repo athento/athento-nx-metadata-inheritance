@@ -115,10 +115,6 @@ public class InheritMetadataOperation {
             }
         }
 
-        // Save document and session
-        session.saveDocument(doc);
-        session.save();
-
         return doc;
     }
 

@@ -8,7 +8,7 @@
                point="listener">
 
         <listener name="InheritMetadataListener" async="false"
-                  postCommit="true" class="org.nuxeo.listener.InheritMetadataListener">
+                  postCommit="false" class="org.nuxeo.listener.InheritMetadataListener">
             <event>aboutToCreate</event>
             <event>beforeDocumentModification</event>
         </listener>
