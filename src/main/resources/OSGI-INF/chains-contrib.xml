@@ -12,6 +12,11 @@
             <operation id="Document.Save" />
         </chain>
 
+        <chain id="ChainInheritMetadatasFromParent">
+            <operation id="Context.FetchDocument"/>
+            <operation id="InheritMetadataFromParent"/>
+        </chain>
+
     </extension>
 
 

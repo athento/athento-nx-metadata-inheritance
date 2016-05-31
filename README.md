@@ -8,7 +8,6 @@ This plugin allows metadata inheritance from a parent documentary type to all ch
 
 ##Properties##
 * athento.metadata.inheritance.ignoredMetadatas: it is a comma-separated value with metadata which it will be ignored.
-* athento.metadata.inheritance.enabledDoctypes: it is a comma-separated value with enabled doctypes to apply inheritance.
 
 #Installation
 

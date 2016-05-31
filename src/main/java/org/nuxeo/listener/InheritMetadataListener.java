@@ -7,6 +7,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
+import org.nuxeo.operations.InheritMetadataFromParentOperation;
 import org.nuxeo.operations.InheritMetadataOperation;
 import org.nuxeo.runtime.api.Framework;
 
@@ -23,11 +24,23 @@ public class InheritMetadataListener implements EventListener {
     public void handleEvent(Event event) throws ClientException {
         // Check document event context
         if (event.getContext() instanceof DocumentEventContext) {
-            // FIXME: Set property in ADMINISTRATION PANEL
-            String ignoredMetadatas = Framework.getProperty("athento.metadata.inheritance.ignoredMetadatas");
-            String enabledDocTypes = Framework.getProperty("athento.metadata.inheritance.enabledDoctypes");
+            // Get current document
             DocumentModel currentDoc = ((DocumentEventContext) event.getContext()).getSourceDocument();
-            if (documentMustBeApplied(currentDoc, enabledDocTypes)) {
+            // Check document to know it it is container of other to start inhertance to his children
+            if (parentDocumentMustBeApplied(currentDoc)) {
+                LOG.info("Inheritable...");
+                // Execute operation
+                InheritMetadataFromParentOperation op = new InheritMetadataFromParentOperation();
+                try {
+                    op.setSession(event.getContext().getCoreSession());
+                    op.run(currentDoc);
+                } catch (Exception e) {
+                    LOG.error("Unable to execute inherit metadata from parent operation", e);
+                }
+            } else if (documentMustBeApplied(currentDoc)) {
+                LOG.info("Inheritor...");
+                // FIXME: Set property in ADMINISTRATION PANEL
+                String ignoredMetadatas = Framework.getProperty("athento.metadata.inheritance.ignoredMetadatas");
                 // Execute operation
                 InheritMetadataOperation op = new InheritMetadataOperation();
                 try {
@@ -40,7 +53,6 @@ public class InheritMetadataListener implements EventListener {
                 }
             }
         }
-
     }
 
     /**
@@ -49,14 +61,22 @@ public class InheritMetadataListener implements EventListener {
      * @param currentDoc
      * @return
      */
-    private boolean documentMustBeApplied(DocumentModel currentDoc, String enabledDoctypes) {
-        if (currentDoc != null && enabledDoctypes != null) {
-            String [] doctypes = enabledDoctypes.split(",");
-            for (String docType : doctypes) {
-                if (docType.trim().equals(currentDoc.getType())) {
-                    return true;
-                }
-            }
+    private boolean documentMustBeApplied(DocumentModel currentDoc) {
+        if (currentDoc != null) {
+           return currentDoc.hasFacet("inheritor");
+        }
+        return false;
+    }
+
+    /**
+     * Check if parent document type is valid to start inheritance.
+     *
+     * @param currentDoc
+     * @return
+     */
+    private boolean parentDocumentMustBeApplied(DocumentModel currentDoc) {
+        if (currentDoc != null) {
+            return currentDoc.hasFacet("inheritable");
         }
         return false;
     }

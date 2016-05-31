@@ -7,5 +7,7 @@
     <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
                point="operations">
         <operation class="org.nuxeo.operations.InheritMetadataOperation"/>
+        <operation class="org.nuxeo.operations.InheritMetadataFromParentOperation"/>
     </extension>
+
 </component>

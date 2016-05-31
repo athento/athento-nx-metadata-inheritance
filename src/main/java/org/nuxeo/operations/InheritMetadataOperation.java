@@ -86,6 +86,11 @@ public class InheritMetadataOperation {
         // Get parent document
         DocumentModel parent = session.getDocument(doc.getParentRef());
 
+        // Check if parent has "inheritable" fact
+        if (!parent.hasFacet("inheritable")) {
+            throw new OperationException("Parent document of " + doc.getId() + " has no facet 'inheritable'");
+        }
+
         // Get parent schemas
         String[] parentSchemas = parent.getSchemas();
         String[] childSchemas = doc.getSchemas();
@@ -107,6 +112,7 @@ public class InheritMetadataOperation {
                         String metadata = entry.getKey();
                         if (!metadataMustBeIgnored(metadata)) {
                             Object value = parent.getPropertyValue(metadata);
+                            LOG.info("Update metadata " + metadata + " with " + value);
                             // Update property of child document
                             updateProperty(doc, metadata, value);
                         }
