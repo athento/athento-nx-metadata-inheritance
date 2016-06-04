@@ -56,15 +56,7 @@ public class InheritMetadataFromParentOperation {
         }
 
         // Find children with facet "inheritor"
-        DocumentModelList inheritorDocs = session.getChildren(doc.getRef(), null, null, new Filter() {
-            @Override
-            public boolean accept(DocumentModel documentModel) {
-                return !documentModel.getCurrentLifeCycleState().equals("deleted")
-                        && documentModel.hasFacet("inheritor");
-            }
-        }, null);
-
-        LOG.info("Inheritors " + inheritorDocs.size());
+        DocumentModelList inheritorDocs = getChildren(doc);
 
         // Get ignored metadatas
         String ignoredMetadatas = Framework.getProperty("athento.metadata.inheritance.ignoredMetadatas");
@@ -83,6 +75,18 @@ public class InheritMetadataFromParentOperation {
         }
 
         return doc;
+    }
+
+    /**
+     * Get children (query TREE mode).
+     *
+     * @return document list
+     */
+    private DocumentModelList getChildren(DocumentModel doc) {
+        String NXQL = String.format("SELECT * FROM Document WHERE " +
+                "ecm:mixinType = 'inheritor' AND ecm:path STARTSWITH '%s' AND " +
+                "ecm:currentLifeCycleState != 'deleted'", doc.getPathAsString());
+        return session.query(NXQL);
     }
 
     public void setSession(CoreSession session) {

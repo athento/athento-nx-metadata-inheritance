@@ -12,6 +12,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.model.Property;
+import org.nuxeo.utils.InheritUtil;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -26,11 +27,6 @@ public class InheritMetadataOperation {
 
     /** ID. */
     public static final String ID = "InheritMetadata";
-
-    /**
-     * IGNORED SCHEMAS.
-     */
-    private static String[] DEFAULT_IGNORED_SCHEMAS = { "dublincore", "common", "uid", "file", "files" };
 
     /**
      * Session.
@@ -91,35 +87,23 @@ public class InheritMetadataOperation {
             throw new OperationException("Parent document of " + doc.getId() + " has no facet 'inheritable'");
         }
 
-        // Get parent schemas
-        String[] parentSchemas = parent.getSchemas();
-        String[] childSchemas = doc.getSchemas();
-
         // Get schemas from param
         this.schemas = getSchemasFromParam();
+        if (this.schemas == null) {
+            this.schemas = parent.getSchemas();
+        }
 
         // Get ignored from param metadata
         this.ignoredMetadatas = getIgnoredMetadatasFromParam();
 
-        // Propagate schemas
-        for (String parentSchema : parentSchemas) {
-            for (String childSchema : childSchemas) {
-                if (parentSchema.equals(childSchema)
-                        && isValidToPropagateSchema(parentSchema)) {
-                    // Get properties from valid schema to propagate to child
-                    Map<String, Object> properties = parent.getProperties(parentSchema);
-                    for (Map.Entry<String, Object> entry : properties.entrySet()) {
-                        String metadata = entry.getKey();
-                        if (!metadataMustBeIgnored(metadata)) {
-                            Object value = parent.getPropertyValue(metadata);
-                            LOG.info("Update metadata " + metadata + " with " + value);
-                            // Update property of child document
-                            updateProperty(doc, metadata, value);
-                        }
-                    }
-                }
-            }
-        }
+        // Propagate schemas from parent to child
+        InheritUtil.propagateSchemas(parent, doc, this.schemas, this.ignoredMetadatas);
+
+        // Add parentId of inherit schema with parent Id
+        String parentId = parent.getId();
+        InheritUtil.updateProperty(doc, "inherit:parentId", parentId);
+        // Refresh update parent metadata
+        InheritUtil.updateProperty(doc, "inherit:updateParent", false);
 
         return doc;
     }
@@ -137,25 +121,6 @@ public class InheritMetadataOperation {
         return paramMetadatas;
     }
 
-    /**
-     * Check metadata to be ignored.
-     *
-     * @param metadata
-     * @return
-     */
-    private boolean metadataMustBeIgnored(String metadata) {
-        boolean ignore = false;
-        if (metadata == null) {
-            ignore = true;
-        }
-        for (String ignoredMetadata : this.ignoredMetadatas) {
-            if (metadata.equals(ignoredMetadata.trim())) {
-                ignore = true;
-                break;
-            }
-        }
-        return ignore;
-    }
 
     /**
      * Get schemas from parameter.
@@ -170,28 +135,6 @@ public class InheritMetadataOperation {
         return paramSchemas;
     }
 
-    /**
-     * Check if parent document type schema is valid to propagate to child document.
-     *
-     * @param schema
-     * @return
-     */
-    private boolean isValidToPropagateSchema(String schema) {
-        boolean valid = false;
-        if (!schemaMustBeIgnored(schema)) {
-            if (hasSchemas()) {
-                for (String paramSchema : this.schemas) {
-                    if (schema.equals(paramSchema.trim())) {
-                        valid = true;
-                        break;
-                    }
-                }
-            } else {
-                valid = true;
-            }
-        }
-        return valid;
-    }
 
     /**
      * Check if there are valid schemas to use in propagation process.
@@ -202,34 +145,6 @@ public class InheritMetadataOperation {
         return this.schemas != null;
     }
 
-
-    /**
-     * Check if schema must be ignored.
-     *
-     * @param schema
-     * @return
-     */
-    private boolean schemaMustBeIgnored(String schema) {
-        if (schema == null) {
-            return true;
-        }
-        return Arrays.asList(DEFAULT_IGNORED_SCHEMAS).contains(schema);
-    }
-
-    /**
-     * Update property.
-     *
-     * @param xpath
-     * @param value
-     * @param doc
-     * @return
-     * @throws Exception on error
-     */
-    private DocumentModel updateProperty(DocumentModel doc, String xpath, Object value) throws Exception {
-        Property p = doc.getProperty(xpath);
-        p.setValue(value);
-        return doc;
-    }
 
     public String getParamIgnoreMetadatas() {
         return paramIgnoreMetadatas;
