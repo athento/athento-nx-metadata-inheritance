@@ -68,6 +68,9 @@ public class InheritMetadataFromParentOperation {
                 op.setSession(session);
                 op.setParamIgnoreMetadatas(ignoredMetadatas);
                 op.run(inheritorDoc);
+                // Set updateParent to false for children modification. It does document modification
+                // ignores parent "inheritable" modification.
+                inheritorDoc.setPropertyValue("inherit:updateParent", false);
                 session.saveDocument(inheritorDoc);
             } catch (Exception e) {
                 LOG.error("Unable to execute inherit metadata operation", e);

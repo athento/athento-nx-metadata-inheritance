@@ -102,8 +102,8 @@ public class InheritMetadataOperation {
         // Add parentId of inherit schema with parent Id
         String parentId = parent.getId();
         InheritUtil.updateProperty(doc, "inherit:parentId", parentId);
-        // Refresh update parent metadata
-        InheritUtil.updateProperty(doc, "inherit:updateParent", false);
+        // Refresh update parent metadata to modify inheritable always
+        InheritUtil.updateProperty(doc, "inherit:updateParent", true);
 
         return doc;
     }
