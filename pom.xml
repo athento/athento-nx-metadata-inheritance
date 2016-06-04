@@ -5,7 +5,7 @@
 
     <groupId>org.athento.nuxeo</groupId>
     <artifactId>athento-nx-metadata-inheritance</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <name>Athento Metadata Inheritance</name>
     <description>
         Athento Metadata Inheritance
