@@ -23,8 +23,7 @@ import java.util.Map;
 @Operation(id = InheritMetadataFromParentOperation.ID, category = Constants.CAT_FETCH, label = "Inherit metadatas from parent", description = "Inherit metadatas from parent")
 public class InheritMetadataFromParentOperation {
 
-    /** Log. */
-    private static final Log LOG = LogFactory.getLog(InheritMetadataFromParentOperation.class);
+    public static final String CONFIG_PATH = "/ExtendedConfig";
 
     /** ID. */
     public static final String ID = "InheritMetadataFromParent";
@@ -81,12 +80,8 @@ public class InheritMetadataFromParentOperation {
 
         return doc;
     }
-	public static final String CONFIG_PATH = "/ExtendedConfig";
 
-	public static String readConfigValue(CoreSession session, String key) {
-		DocumentModel conf = session.getDocument(new PathRef(CONFIG_PATH));
-		return String.valueOf(conf.getPropertyValue(key));
-	}
+
     
     
     /**
@@ -104,4 +99,13 @@ public class InheritMetadataFromParentOperation {
     public void setSession(CoreSession session) {
         this.session = session;
     }
+    
+    private static String readConfigValue(CoreSession session, String key) {
+        DocumentModel conf = session.getDocument(new PathRef(CONFIG_PATH));
+        return String.valueOf(conf.getPropertyValue(key));
+    }
+
+    /** Log. */
+    private static final Log LOG = LogFactory.getLog(InheritMetadataFromParentOperation.class);
+
 }
