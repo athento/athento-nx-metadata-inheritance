@@ -8,6 +8,9 @@ Nuxeo-Component: OSGI-INF/widgettypes-contrib.xml,
  OSGI-INF/operations-contrib.xml,
  OSGI-INF/chains-contrib.xml,
  OSGI-INF/actions-contrib.xml,
- OSGI-INF/events-contrib.xml
+ OSGI-INF/events-contrib.xml,
+ OSGI-INF/ExtendedConfig/extended-config-doctypes-contrib.xml,
+ OSGI-INF/ExtendedConfig/extended-config-schemas-contrib.xml,
+ OSGI-INF/ExtendedConfig/extended-config-layouts-contrib.xml
 Bundle-SymbolicName: org.athento.nuxeo.plugins.automation.nuxeo_inheritMetadatas
 

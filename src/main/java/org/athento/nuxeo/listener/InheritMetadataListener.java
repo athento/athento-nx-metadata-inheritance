@@ -1,27 +1,22 @@
-package org.nuxeo.listener;
+package org.athento.nuxeo.listener;
 
-import org.apache.commons.collections.list.SynchronizedList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.automation.OperationException;
-import org.nuxeo.ecm.core.api.ClientException;
-import org.nuxeo.ecm.core.api.CoreSession;
-import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.IdRef;
+import org.nuxeo.ecm.core.api.*;
 import org.nuxeo.ecm.core.api.event.DocumentEventTypes;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
-import org.nuxeo.ecm.core.model.Document;
-import org.nuxeo.operations.InheritMetadataFromParentOperation;
-import org.nuxeo.operations.InheritMetadataOperation;
+import org.athento.nuxeo.operations.InheritMetadataFromParentOperation;
+import org.athento.nuxeo.operations.InheritMetadataOperation;
+import org.nuxeo.ecm.core.schema.FacetNames;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.runtime.api.Framework;
-import org.nuxeo.utils.InheritUtil;
+import org.athento.nuxeo.utils.InheritUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by victorsanchez on 31/5/16.
@@ -68,13 +63,19 @@ public class InheritMetadataListener implements EventListener {
                             // Find first inheritable parent
                             DocumentModel parentDoc = session.getDocument(new IdRef(inheritableParentId));
                             // Update parent document with current document schemas
-                            InheritUtil.propagateSchemas(currentDoc, parentDoc, currentDoc.getSchemas(), ignoredMetadatas.split(","));
+                            InheritUtil.propagateSchemas(session, currentDoc, parentDoc, currentDoc.getSchemas(), ignoredMetadatas.split(","));
+                            // Increase version
+                            if (parentDoc.hasFacet(FacetNames.VERSIONABLE)) {
+                                parentDoc.putContextData(VersioningService.VERSIONING_OPTION, VersioningOption.MINOR);
+                            }
                             session.saveDocument(parentDoc);
                         }
                     } else {
-                        currentDoc.setPropertyValue("inherit:updateParent", true);
-                        ignoredForUpdates.add(currentDoc);
-                        session.saveDocument(currentDoc);
+                        if (!currentDoc.isVersion()) {
+                            currentDoc.setPropertyValue("inherit:updateParent", true);
+                            ignoredForUpdates.add(currentDoc);
+                            session.saveDocument(currentDoc);
+                        }
                     }
                 } else if (DocumentEventTypes.DOCUMENT_CREATED.equals(eventName)) {
                     // Execute operation

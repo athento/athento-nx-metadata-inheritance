@@ -1,4 +1,4 @@
-package org.nuxeo.operations;
+package org.athento.nuxeo.operations;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,14 +10,7 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.DocumentRef;
-import org.nuxeo.ecm.core.api.model.Property;
-import org.nuxeo.utils.InheritUtil;
-
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import org.athento.nuxeo.utils.InheritUtil;
 
 @Operation(id = InheritMetadataOperation.ID, category = Constants.CAT_FETCH, label = "Inherit metadatas", description = "Inherit metadatas from parent")
 public class InheritMetadataOperation {
@@ -97,7 +90,7 @@ public class InheritMetadataOperation {
         this.ignoredMetadatas = getIgnoredMetadatasFromParam();
 
         // Propagate schemas from parent to child
-        InheritUtil.propagateSchemas(parent, doc, this.schemas, this.ignoredMetadatas);
+        InheritUtil.propagateSchemas(session, parent, doc, this.schemas, this.ignoredMetadatas);
 
         // Add parentId of inherit schema with parent Id
         String parentId = parent.getId();

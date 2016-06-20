@@ -8,7 +8,7 @@
                point="listener">
 
         <listener name="InheritMetadataListener" async="false"
-                  postCommit="true" class="org.nuxeo.listener.InheritMetadataListener">
+                  postCommit="true" class="org.athento.nuxeo.listener.InheritMetadataListener">
             <event>documentCreated</event>
             <event>documentModified</event>
         </listener>
