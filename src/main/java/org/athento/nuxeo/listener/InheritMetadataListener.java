@@ -2,16 +2,15 @@ package org.athento.nuxeo.listener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
-import org.nuxeo.ecm.core.api.CoreSession;
-import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.IdRef;
+import org.nuxeo.ecm.core.api.*;
 import org.nuxeo.ecm.core.api.event.DocumentEventTypes;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 import org.athento.nuxeo.operations.InheritMetadataFromParentOperation;
 import org.athento.nuxeo.operations.InheritMetadataOperation;
+import org.nuxeo.ecm.core.schema.FacetNames;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.runtime.api.Framework;
 import org.athento.nuxeo.utils.InheritUtil;
 
@@ -65,6 +64,10 @@ public class InheritMetadataListener implements EventListener {
                             DocumentModel parentDoc = session.getDocument(new IdRef(inheritableParentId));
                             // Update parent document with current document schemas
                             InheritUtil.propagateSchemas(session, currentDoc, parentDoc, currentDoc.getSchemas(), ignoredMetadatas.split(","));
+                            // Increase version
+                            if (parentDoc.hasFacet(FacetNames.VERSIONABLE)) {
+                                parentDoc.putContextData(VersioningService.VERSIONING_OPTION, VersioningOption.MINOR);
+                            }
                             session.saveDocument(parentDoc);
                         }
                     } else {

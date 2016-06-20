@@ -11,6 +11,9 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.athento.nuxeo.utils.InheritUtil;
+import org.nuxeo.ecm.core.api.VersioningOption;
+import org.nuxeo.ecm.core.schema.FacetNames;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 
 @Operation(id = InheritMetadataFromParentOperation.ID, category = Constants.CAT_FETCH, label = "Inherit metadatas from parent", description = "Inherit metadatas from parent")
 public class InheritMetadataFromParentOperation {
@@ -62,6 +65,10 @@ public class InheritMetadataFromParentOperation {
                 // Set updateParent to false for children modification. It does document modification
                 // ignores parent "inheritable" modification.
                 inheritorDoc.setPropertyValue("inherit:updateParent", false);
+                // Increase version
+                if (inheritorDoc.hasFacet(FacetNames.VERSIONABLE)) {
+                    inheritorDoc.putContextData(VersioningService.VERSIONING_OPTION, VersioningOption.MINOR);
+                }
                 session.saveDocument(inheritorDoc);
             } catch (Exception e) {
                 LOG.error("Unable to execute inherit metadata operation", e);

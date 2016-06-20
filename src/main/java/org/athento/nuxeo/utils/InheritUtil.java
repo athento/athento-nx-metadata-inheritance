@@ -45,7 +45,7 @@ public final class InheritUtil {
                         if (!metadataMustBeIgnored(metadata, ignoredMetadatas)) {
                             Object value = origin.getPropertyValue(metadata);
                             // From #AT-921
-                            if (allowToSaveValue(session, value)) {
+                            if (allowToSaveValue(session, metadata, value)) {
                                 // Update property of destiny document
                                 updateProperty(destiny, metadata, value);
                             }
@@ -64,13 +64,11 @@ public final class InheritUtil {
      * @param value
      * @return
      */
-    private static boolean allowToSaveValue(CoreSession session, Object value) {
-        if (value != null) {
+    private static boolean allowToSaveValue(CoreSession session, String metadata, Object value) {
+        if (value != null && !"null".equals(value)) {
             return true;
         } else {
-            boolean save = InheritUtil.readConfigValue(session, "metadataInheritanceConfig:propagateNullValues", false);
-            LOG.info("Save " + value + "?" + save);
-            return save;
+            return InheritUtil.readConfigValue(session, "metadataInheritanceConfig:propagateNullValues", false);
         }
     }
 
