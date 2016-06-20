@@ -75,7 +75,7 @@ public class InheritMetadataListener implements EventListener {
                             currentDoc.setPropertyValue("inherit:updateParent", true);
                             ignoredForUpdates.add(currentDoc);
                             session.saveDocument(currentDoc);
-                        }
+                        }   
                     }
                 } else if (DocumentEventTypes.DOCUMENT_CREATED.equals(eventName)) {
                     // Execute operation
