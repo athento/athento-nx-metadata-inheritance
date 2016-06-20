@@ -18,6 +18,12 @@
 					</properties>
 					<widget>ignoredMetadatas</widget>
 				</row>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>propagateNullValues</widget>
+				</row>
 			</rows>
 			<widget name="ignoredMetadatas" type="text">
 				<labels>
@@ -26,6 +32,15 @@
 				<translated>true</translated>
 				<fields>
 					<field>metadataInheritanceConfig:ignoredMetadatas</field>
+				</fields>
+			</widget>
+			<widget name="propagateNullValues" type="checkbox">
+				<labels>
+					<label mode="any">label.metadataInheritanceConfig.propagateNullValues</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field>metadataInheritanceConfig:propagateNullValues</field>
 				</fields>
 			</widget>
 		</layout>

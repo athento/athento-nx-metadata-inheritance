@@ -1,4 +1,4 @@
-package org.nuxeo.operations;
+package org.athento.nuxeo.operations;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -7,23 +7,13 @@ import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
-import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
-import org.nuxeo.ecm.core.api.Filter;
-import org.nuxeo.ecm.core.api.PathRef;
-import org.nuxeo.ecm.core.api.model.Property;
-import org.nuxeo.runtime.api.Framework;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import org.athento.nuxeo.utils.InheritUtil;
 
 @Operation(id = InheritMetadataFromParentOperation.ID, category = Constants.CAT_FETCH, label = "Inherit metadatas from parent", description = "Inherit metadatas from parent")
 public class InheritMetadataFromParentOperation {
-
-    public static final String CONFIG_PATH = "/ExtendedConfig";
 
     /** ID. */
     public static final String ID = "InheritMetadataFromParent";
@@ -60,7 +50,7 @@ public class InheritMetadataFromParentOperation {
         DocumentModelList inheritorDocs = getChildren(doc);
 
         // Get ignored metadatas
-        String ignoredMetadatas = readConfigValue(session, "metadataInheritanceConfig:ignoredMetadatas");
+        String ignoredMetadatas = InheritUtil.readConfigValue(session, "metadataInheritanceConfig:ignoredMetadatas", "");
 
         for (DocumentModel inheritorDoc : inheritorDocs) {
             // Execute operation
@@ -98,11 +88,6 @@ public class InheritMetadataFromParentOperation {
 
     public void setSession(CoreSession session) {
         this.session = session;
-    }
-    
-    private static String readConfigValue(CoreSession session, String key) {
-        DocumentModel conf = session.getDocument(new PathRef(CONFIG_PATH));
-        return String.valueOf(conf.getPropertyValue(key));
     }
 
     /** Log. */

@@ -1,8 +1,10 @@
-package org.nuxeo.utils;
+package org.athento.nuxeo.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.model.Property;
 
 import java.util.Arrays;
@@ -12,6 +14,9 @@ import java.util.Map;
  * Created by victorsanchez on 3/6/16.
  */
 public final class InheritUtil {
+
+    /** Extended config path. */
+    public static final String CONFIG_PATH = "/ExtendedConfig";
 
     /** Log. */
     private static final Log LOG = LogFactory.getLog(InheritUtil.class);
@@ -28,7 +33,7 @@ public final class InheritUtil {
      * @param destiny
      * @param schemas
      */
-    public static void propagateSchemas(DocumentModel origin, DocumentModel destiny, String [] schemas, String [] ignoredMetadatas) {
+    public static void propagateSchemas(CoreSession session, DocumentModel origin, DocumentModel destiny, String [] schemas, String [] ignoredMetadatas) {
         // Propagate schemas
         for (String schema : schemas) {
             if (documentsHaveSchema(origin, destiny, schema)) {
@@ -39,12 +44,51 @@ public final class InheritUtil {
                         String metadata = entry.getKey();
                         if (!metadataMustBeIgnored(metadata, ignoredMetadatas)) {
                             Object value = origin.getPropertyValue(metadata);
-                            // Update property of destiny document
-                            updateProperty(destiny, metadata, value);
+                            // From #AT-921
+                            if (allowToSaveValue(session, value)) {
+                                // Update property of destiny document
+                                updateProperty(destiny, metadata, value);
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Check if null value of metadata must be propagated using Extendedconfig property.
+     * <i>From #AT-921</i>
+     *
+     * @param session
+     * @param value
+     * @return
+     */
+    private static boolean allowToSaveValue(CoreSession session, Object value) {
+        if (value != null) {
+            return true;
+        } else {
+            boolean save = InheritUtil.readConfigValue(session, "metadataInheritanceConfig:propagateNullValues", false);
+            LOG.info("Save " + value + "?" + save);
+            return save;
+        }
+    }
+
+    /**
+     * Read a extended config value.
+     *
+     * @param session
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public static <T> T readConfigValue(CoreSession session, String key, T defaultValue) {
+        DocumentModel conf = session.getDocument(new PathRef(CONFIG_PATH));
+        T value = (T) conf.getPropertyValue(key);
+        if (value == null) {
+            return defaultValue;
+        } else {
+            return value;
         }
     }
 
