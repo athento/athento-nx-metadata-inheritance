@@ -11,6 +11,8 @@
                   postCommit="true" class="org.athento.nuxeo.listener.InheritMetadataListener">
             <event>documentCreated</event>
             <event>documentModified</event>
+            <event>documentMoved</event>
+            <event>documentDuplicated</event>
         </listener>
 
     </extension>

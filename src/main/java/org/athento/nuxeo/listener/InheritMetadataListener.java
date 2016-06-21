@@ -23,13 +23,19 @@ import java.util.List;
  */
 public class InheritMetadataListener implements EventListener {
 
-    /** Log. */
+    /**
+     * Log.
+     */
     private static final Log LOG = LogFactory.getLog(InheritMetadataListener.class);
 
-    /** Ignored documents to update. */
+    /**
+     * Ignored documents to update.
+     */
     private static List<DocumentModel> ignoredForUpdates = Collections.synchronizedList(new ArrayList<DocumentModel>());
 
-    /** Handler. */
+    /**
+     * Handler.
+     */
     @Override
     public void handleEvent(Event event) throws ClientException {
         // Check document event context
@@ -41,8 +47,15 @@ public class InheritMetadataListener implements EventListener {
                 ignoredForUpdates.remove(currentDoc);
                 return;
             }
+            // Ignore versions
+            if (currentDoc.isVersion()) {
+                return;
+            }
             // Check document to know it it is container of other to start inheritance to his children
             if (parentDocumentMustBeApplied(currentDoc)) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Inheritable " + currentDoc.getId() + " executing inheritance...");
+                }
                 // Execute operation
                 InheritMetadataFromParentOperation op = new InheritMetadataFromParentOperation();
                 try {
@@ -56,6 +69,9 @@ public class InheritMetadataListener implements EventListener {
                 // FIXME: Set property in ADMINISTRATION PANEL
                 String ignoredMetadatas = Framework.getProperty("athento.metadata.inheritance.ignoredMetadatas");
                 if (DocumentEventTypes.DOCUMENT_UPDATED.equals(eventName)) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Inheritor " + currentDoc.getId() + " updated...");
+                    }
                     // Check update parent
                     if (updateInheritableParent(currentDoc)) {
                         String inheritableParentId = (String) currentDoc.getPropertyValue("inherit:parentId");
@@ -71,13 +87,16 @@ public class InheritMetadataListener implements EventListener {
                             session.saveDocument(parentDoc);
                         }
                     } else {
-                        if (!currentDoc.isVersion()) {
-                            currentDoc.setPropertyValue("inherit:updateParent", true);
-                            ignoredForUpdates.add(currentDoc);
-                            session.saveDocument(currentDoc);
-                        }   
+                        currentDoc.setPropertyValue("inherit:updateParent", true);
+                        ignoredForUpdates.add(currentDoc);
+                        session.saveDocument(currentDoc);
                     }
-                } else if (DocumentEventTypes.DOCUMENT_CREATED.equals(eventName)) {
+                } else if (DocumentEventTypes.DOCUMENT_CREATED.equals(eventName)
+                        || DocumentEventTypes.DOCUMENT_MOVED.equals(eventName)
+                        || DocumentEventTypes.DOCUMENT_DUPLICATED.equals(eventName)) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Inheritor " + currentDoc.getId() + " created, duplicated or moved...");
+                    }
                     // Execute operation
                     InheritMetadataOperation op = new InheritMetadataOperation();
                     try {
@@ -85,6 +104,8 @@ public class InheritMetadataListener implements EventListener {
                         op.setParamIgnoreMetadatas(ignoredMetadatas);
                         // FIX: Add only schemas here if it is necessary
                         op.run(currentDoc);
+                        // Save document to propagate update event
+                        session.saveDocument(currentDoc);
                     } catch (Exception e) {
                         throw new ClientException("Unable to execute inherit metadata operation", e);
                     }
@@ -128,7 +149,7 @@ public class InheritMetadataListener implements EventListener {
      */
     private boolean documentMustBeApplied(DocumentModel currentDoc) {
         if (currentDoc != null) {
-           return currentDoc.hasFacet("inheritor");
+            return currentDoc.hasFacet("inheritor");
         }
         return false;
     }
