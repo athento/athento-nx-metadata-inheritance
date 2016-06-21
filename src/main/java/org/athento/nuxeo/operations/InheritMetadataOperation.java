@@ -72,13 +72,16 @@ public class InheritMetadataOperation {
                     " because document '" + doc.getId() + " has no parent document");
         }
 
-        // Get parent document
-        DocumentModel parent = session.getDocument(doc.getParentRef());
+        // Get "inheritable" parent for the document
+        DocumentModel parent = getInheritableParent(session, doc);
 
         // Check if parent has "inheritable" fact
-        if (!parent.hasFacet("inheritable")) {
-            throw new OperationException("Parent document of " + doc.getId() + " has no facet 'inheritable'");
+        if (parent == null) {
+            throw new OperationException("There is a no parent with facet "
+                    + "'inheritable' for the document " + doc.getId());
         }
+
+        LOG.info("Parent inheritable " + parent.getId() + ", " + parent.getName());
 
         // Get schemas from param
         this.schemas = getSchemasFromParam();
@@ -93,12 +96,31 @@ public class InheritMetadataOperation {
         InheritUtil.propagateSchemas(session, parent, doc, this.schemas, this.ignoredMetadatas);
 
         // Add parentId of inherit schema with parent Id
-        String parentId = parent.getId();
-        InheritUtil.updateProperty(doc, "inherit:parentId", parentId);
+        InheritUtil.updateProperty(doc, "inherit:parentId", parent.getId());
         // Refresh update parent metadata to modify inheritable always
         InheritUtil.updateProperty(doc, "inherit:updateParent", true);
 
         return doc;
+    }
+
+    /**
+     * Get inheritable parent of a document.
+     *
+     * @param session
+     * @param doc
+     * @return
+     */
+    private DocumentModel getInheritableParent(CoreSession session, DocumentModel doc) {
+        DocumentModel parent = session.getDocument(doc.getParentRef());
+        if (parent == null) {
+            return null;
+        } else {
+            if (parent.hasFacet("inheritable")) {
+                return parent;
+            } else {
+                return getInheritableParent(session, parent);
+            }
+        }
     }
 
     /**
