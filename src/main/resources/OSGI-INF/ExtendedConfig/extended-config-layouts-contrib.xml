@@ -24,6 +24,12 @@
 					</properties>
 					<widget>propagateNullValues</widget>
 				</row>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>enableSiblingInheritance</widget>
+				</row>
 			</rows>
 			<widget name="ignoredMetadatas" type="text">
 				<labels>
@@ -41,6 +47,15 @@
 				<translated>true</translated>
 				<fields>
 					<field>metadataInheritanceConfig:propagateNullValues</field>
+				</fields>
+			</widget>
+			<widget name="enableSiblingInheritance" type="checkbox">
+				<labels>
+					<label mode="any">label.metadataInheritanceConfig.enableSiblingInheritance</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field>metadataInheritanceConfig:enableSiblingInheritance</field>
 				</fields>
 			</widget>
 		</layout>

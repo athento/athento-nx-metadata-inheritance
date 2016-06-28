@@ -41,5 +41,6 @@
 	<!-- defaultDestinationPath -->
 	<xs:element name="ignoredMetadatas" type="xs:string" default=""/>
 	<xs:element name="propagateNullValues" type="xs:boolean" default="false" />
+	<xs:element name="enableSiblingInheritance" type="xs:boolean" default="false" />
 
 </xs:schema>

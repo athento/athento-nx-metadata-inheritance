@@ -69,27 +69,30 @@ public class InheritMetadataListener implements EventListener {
                 // FIXME: Set property in ADMINISTRATION PANEL
                 String ignoredMetadatas = Framework.getProperty("athento.metadata.inheritance.ignoredMetadatas");
                 if (DocumentEventTypes.DOCUMENT_UPDATED.equals(eventName)) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Inheritor " + currentDoc.getId() + " updated...");
-                    }
-                    // Check update parent
-                    if (updateInheritableParent(currentDoc)) {
-                        String inheritableParentId = (String) currentDoc.getPropertyValue("inherit:parentId");
-                        if (inheritableParentId != null && !inheritableParentId.isEmpty()) {
-                            // Find first inheritable parent
-                            DocumentModel parentDoc = session.getDocument(new IdRef(inheritableParentId));
-                            // Update parent document with current document schemas
-                            InheritUtil.propagateSchemas(session, currentDoc, parentDoc, currentDoc.getSchemas(), ignoredMetadatas.split(","));
-                            // Increase version
-                            if (parentDoc.hasFacet(FacetNames.VERSIONABLE)) {
-                                parentDoc.putContextData(VersioningService.VERSIONING_OPTION, VersioningOption.MINOR);
-                            }
-                            session.saveDocument(parentDoc);
+                    // Check sibling inheritance
+                    if (isSiblingInheritanceEnabled(session)) {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Sibling is enabled: inheritor " + currentDoc.getId() + " updated, check updated parent...");
                         }
-                    } else {
-                        currentDoc.setPropertyValue("inherit:updateParent", true);
-                        ignoredForUpdates.add(currentDoc);
-                        session.saveDocument(currentDoc);
+                        // Check update parent
+                        if (updateInheritableParent(currentDoc)) {
+                            String inheritableParentId = (String) currentDoc.getPropertyValue("inherit:parentId");
+                            if (inheritableParentId != null && !inheritableParentId.isEmpty()) {
+                                // Find first inheritable parent
+                                DocumentModel parentDoc = session.getDocument(new IdRef(inheritableParentId));
+                                // Update parent document with current document schemas
+                                InheritUtil.propagateSchemas(session, currentDoc, parentDoc, currentDoc.getSchemas(), ignoredMetadatas.split(","));
+                                // Increase version
+                                if (parentDoc.hasFacet(FacetNames.VERSIONABLE)) {
+                                    parentDoc.putContextData(VersioningService.VERSIONING_OPTION, VersioningOption.MINOR);
+                                }
+                                session.saveDocument(parentDoc);
+                            }
+                        } else {
+                            currentDoc.setPropertyValue("inherit:updateParent", true);
+                            ignoredForUpdates.add(currentDoc);
+                            session.saveDocument(currentDoc);
+                        }
                     }
                 } else if (DocumentEventTypes.DOCUMENT_CREATED.equals(eventName)
                         || DocumentEventTypes.DOCUMENT_MOVED.equals(eventName)
@@ -112,6 +115,16 @@ public class InheritMetadataListener implements EventListener {
                 }
             }
         }
+    }
+
+    /**
+     * Check if sibling inheritance is enabled.
+     *
+     * @param session
+     * @return
+     */
+    private boolean isSiblingInheritanceEnabled(CoreSession session) {
+        return InheritUtil.readConfigValue(session, "metadataInheritanceConfig:enableSiblingInheritance", false);
     }
 
     /**
