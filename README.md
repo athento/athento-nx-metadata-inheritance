@@ -9,6 +9,7 @@ This plugin allows metadata inheritance from a parent documentary type to all ch
 ##Extended Config##
 * ignoredMetadatas: it is a comma-separated value with metadata which it will be ignored.
 * propagateNullValues: this value indicates to inheritance handler to propagate null values between document fields.
+* enableSiblingInheritance: this value enables sibling inheritance. When an "inheritor" document is modified, the "inheritable" parent (inherit:parentId) and siblings are updated with his changes.
 
 #Installation
 

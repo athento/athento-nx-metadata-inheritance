@@ -15,10 +15,14 @@ import org.athento.nuxeo.utils.InheritUtil;
 @Operation(id = InheritMetadataOperation.ID, category = Constants.CAT_FETCH, label = "Inherit metadatas", description = "Inherit metadatas from parent")
 public class InheritMetadataOperation {
 
-    /** Log. */
+    /**
+     * Log.
+     */
     private static final Log LOG = LogFactory.getLog(InheritMetadataOperation.class);
 
-    /** ID. */
+    /**
+     * ID.
+     */
     public static final String ID = "InheritMetadata";
 
     /**
@@ -42,12 +46,12 @@ public class InheritMetadataOperation {
     /**
      * Param schemas.
      */
-    private String [] schemas;
+    private String[] schemas;
 
     /**
      * Param ignored metadatas.
      */
-    private String [] ignoredMetadatas;
+    private String[] ignoredMetadatas;
 
 
     /**
@@ -111,10 +115,10 @@ public class InheritMetadataOperation {
      * @return
      */
     private DocumentModel getInheritableParent(CoreSession session, DocumentModel doc) {
-        DocumentModel parent = session.getDocument(doc.getParentRef());
-        if (parent == null) {
+        if (doc == null || "Domain".equals(doc.getType())) {
             return null;
         } else {
+            DocumentModel parent = session.getDocument(doc.getParentRef());
             if (parent.hasFacet("inheritable")) {
                 return parent;
             } else {
