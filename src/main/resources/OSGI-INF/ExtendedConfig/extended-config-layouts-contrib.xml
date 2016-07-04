@@ -12,6 +12,12 @@
 				</template>
 			</templates>
 			<rows>
+                <row>
+                    <properties mode="any">
+                        <property name="nxl_colspan_0">1</property>
+                    </properties>
+                    <widget>enableInheritance</widget>
+                </row>
 				<row>
 					<properties mode="any">
 						<property name="nxl_colspan_0">1</property>
@@ -31,6 +37,15 @@
 					<widget>enableSiblingInheritance</widget>
 				</row>
 			</rows>
+			<widget name="enableInheritance" type="checkbox">
+				<labels>
+					<label mode="any">label.metadataInheritanceConfig.enableInheritance</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field>metadataInheritanceConfig:enableInheritance</field>
+				</fields>
+			</widget>
 			<widget name="ignoredMetadatas" type="text">
 				<labels>
 					<label mode="any">label.metadataInheritanceConfig.ignoredMetadatas</label>

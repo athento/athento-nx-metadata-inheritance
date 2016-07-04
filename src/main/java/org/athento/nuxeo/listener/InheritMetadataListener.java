@@ -38,6 +38,11 @@ public class InheritMetadataListener implements EventListener {
      */
     @Override
     public void handleEvent(Event event) throws ClientException {
+        CoreSession session = event.getContext().getCoreSession();
+        // Check enabled
+        if (!InheritUtil.readConfigValue(session, "metadataInheritanceConfig:enableInheritance", true)) {
+            return;
+        }
         // Check document event context
         if (event.getContext() instanceof DocumentEventContext) {
             String eventName = event.getName();
@@ -65,7 +70,6 @@ public class InheritMetadataListener implements EventListener {
                     LOG.error("Unable to execute inherit metadata from parent operation", e);
                 }
             } else if (documentMustBeApplied(currentDoc)) {
-                CoreSession session = event.getContext().getCoreSession();
                 // FIXME: Set property in ADMINISTRATION PANEL
                 String ignoredMetadatas = Framework.getProperty("athento.metadata.inheritance.ignoredMetadatas");
                 if (DocumentEventTypes.DOCUMENT_UPDATED.equals(eventName)) {
