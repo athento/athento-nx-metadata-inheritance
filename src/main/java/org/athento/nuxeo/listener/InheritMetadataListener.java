@@ -70,13 +70,12 @@ public class InheritMetadataListener implements EventListener {
                     LOG.error("Unable to execute inherit metadata from parent operation", e);
                 }
             } else if (documentMustBeApplied(currentDoc)) {
-                // FIXME: Set property in ADMINISTRATION PANEL
-                String ignoredMetadatas = Framework.getProperty("athento.metadata.inheritance.ignoredMetadatas");
+                String ignoredMetadatas = InheritUtil.readConfigValue(session, "metadataInheritanceConfig:ignoredMetadatas", "");
                 if (DocumentEventTypes.DOCUMENT_UPDATED.equals(eventName)) {
                     // Check sibling inheritance
                     if (isSiblingInheritanceEnabled(session)) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Sibling is enabled: inheritor " + currentDoc.getId() + " updated, check updated parent...");
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("Sibling is enabled: inheritor " + currentDoc.getId() + " updated, check updated parent...");
                         }
                         // Check update parent
                         if (updateInheritableParent(currentDoc)) {
