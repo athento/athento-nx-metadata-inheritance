@@ -2,17 +2,16 @@ package org.athento.nuxeo.listener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.athento.nuxeo.operations.InheritMetadataFromParentOperation;
+import org.athento.nuxeo.operations.InheritMetadataOperation;
+import org.athento.nuxeo.utils.InheritUtil;
 import org.nuxeo.ecm.core.api.*;
 import org.nuxeo.ecm.core.api.event.DocumentEventTypes;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
-import org.athento.nuxeo.operations.InheritMetadataFromParentOperation;
-import org.athento.nuxeo.operations.InheritMetadataOperation;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.core.versioning.VersioningService;
-import org.nuxeo.runtime.api.Framework;
-import org.athento.nuxeo.utils.InheritUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +55,7 @@ public class InheritMetadataListener implements EventListener {
             if (currentDoc.isVersion()) {
                 return;
             }
-            // Check document to know it it is container of other to start inheritance to his children
+            // Check document to know it it is container of other to start inheritance to its children
             if (parentDocumentMustBeApplied(currentDoc)) {
                 if (LOG.isInfoEnabled()) {
                     LOG.info("Inheritable " + currentDoc.getId() + " executing inheritance...");
