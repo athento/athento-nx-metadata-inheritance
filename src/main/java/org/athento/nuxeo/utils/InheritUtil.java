@@ -24,7 +24,8 @@ public final class InheritUtil {
     /**
      * IGNORED SCHEMAS.
      */
-    public static String[] DEFAULT_IGNORED_SCHEMAS = { "dublincore", "common", "uid", "file", "files" };
+    public static String[] DEFAULT_IGNORED_SCHEMAS = { "dublincore", "common",
+        "uid", "file", "files" };
 
     /**
      * Propagate schemas.
@@ -33,14 +34,18 @@ public final class InheritUtil {
      * @param destiny
      * @param schemas
      */
-    public static void propagateSchemas(CoreSession session, DocumentModel origin, DocumentModel destiny, String [] schemas, String [] ignoredMetadatas) {
+    public static void propagateSchemas(CoreSession session,
+        DocumentModel origin, DocumentModel destiny, String[] schemas,
+        String[] ignoredMetadatas) {
         // Propagate schemas
         for (String schema : schemas) {
             if (documentsHaveSchema(origin, destiny, schema)) {
                 if (isValidToPropagateSchema(schema, schemas)) {
                     // Get properties from valid schema to propagate to child
-                    Map<String, Object> properties = origin.getProperties(schema);
-                    for (Map.Entry<String, Object> entry : properties.entrySet()) {
+                    Map<String, Object> properties = origin
+                        .getProperties(schema);
+                    for (Map.Entry<String, Object> entry : properties
+                        .entrySet()) {
                         String metadata = entry.getKey();
                         if (!metadataMustBeIgnored(metadata, ignoredMetadatas)) {
                             Object value = origin.getPropertyValue(metadata);
@@ -57,19 +62,28 @@ public final class InheritUtil {
     }
 
     /**
-     * Check if null value of metadata must be propagated using Extendedconfig property.
-     * <i>From #AT-921</i>
+     * Check if null value of metadata must be propagated using Extendedconfig
+     * property. <i>From #AT-921</i>
      *
      * @param session
      * @param value
      * @return
      */
-    private static boolean allowToSaveValue(CoreSession session, String metadata, Object value) {
-        if (value != null && !"null".equals(value)) {
-            return true;
+    private static boolean allowToSaveValue(CoreSession session,
+        String metadata, Object value) {
+        boolean retVal;
+        if (value != null && !"null".equals(value)
+            && !String.valueOf(value).isEmpty()) {
+            retVal = true;
         } else {
-            return InheritUtil.readConfigValue(session, "metadataInheritanceConfig:propagateNullValues", false);
+            retVal = InheritUtil.readConfigValue(session,
+                "metadataInheritanceConfig:propagateNullValues", false);
         }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(" ... allow to save value [" + value + "] on metadata ["
+                + metadata + "]: " + retVal);
+        }
+        return retVal;
     }
 
     /**
@@ -80,7 +94,8 @@ public final class InheritUtil {
      * @param defaultValue
      * @return
      */
-    public static <T> T readConfigValue(CoreSession session, String key, T defaultValue) {
+    public static <T> T readConfigValue(CoreSession session, String key,
+        T defaultValue) {
         DocumentModel conf = session.getDocument(new PathRef(CONFIG_PATH));
         T value = (T) conf.getPropertyValue(key);
         if (value == null) {
@@ -98,10 +113,11 @@ public final class InheritUtil {
      * @param schema
      * @return
      */
-    private static boolean documentsHaveSchema(DocumentModel origin, DocumentModel destiny, String schema) {
-        return origin != null && destiny != null && origin.hasSchema(schema) && destiny.hasSchema(schema);
+    private static boolean documentsHaveSchema(DocumentModel origin,
+        DocumentModel destiny, String schema) {
+        return origin != null && destiny != null && origin.hasSchema(schema)
+            && destiny.hasSchema(schema);
     }
-
 
     /**
      * Update property.
@@ -110,21 +126,29 @@ public final class InheritUtil {
      * @param value
      * @param doc
      * @return
-     * @throws Exception on error
+     * @throws Exception
+     *             on error
      */
-    public static DocumentModel updateProperty(DocumentModel doc, String xpath, Object value) {
+    public static DocumentModel updateProperty(DocumentModel doc, String xpath,
+        Object value) {
         Property p = doc.getProperty(xpath);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(" updating doc [" + doc.getPathAsString()
+                + "] property [" + xpath + "] with value [" + value + "]");
+        }
         p.setValue(value);
         return doc;
     }
 
     /**
-     * Check if parent document type schema is valid to propagate to child document.
+     * Check if parent document type schema is valid to propagate to child
+     * document.
      *
      * @param schema
      * @return
      */
-    public static boolean isValidToPropagateSchema(String schema, String [] schemas) {
+    public static boolean isValidToPropagateSchema(String schema,
+        String[] schemas) {
         boolean valid = false;
         if (!schemaMustBeIgnored(schema)) {
             if (schemas != null && schemas.length > 0) {
@@ -140,7 +164,6 @@ public final class InheritUtil {
         }
         return valid;
     }
-
 
     /**
      * Check if schema must be ignored.
@@ -161,7 +184,8 @@ public final class InheritUtil {
      * @param metadata
      * @return
      */
-    public static boolean metadataMustBeIgnored(String metadata, String [] ignoredMetadatas) {
+    public static boolean metadataMustBeIgnored(String metadata,
+        String[] ignoredMetadatas) {
         boolean ignore = false;
         if (metadata == null) {
             ignore = true;

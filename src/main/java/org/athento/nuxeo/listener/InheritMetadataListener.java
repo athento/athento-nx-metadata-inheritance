@@ -56,10 +56,10 @@ public class InheritMetadataListener implements EventListener {
             if (currentDoc.isVersion()) {
                 return;
             }
-            // Check document to know it it is container of other to start inheritance to his children
+            // Check document to know it it is container of other to start inheritance to its children
             if (parentDocumentMustBeApplied(currentDoc)) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Inheritable " + currentDoc.getId() + " executing inheritance...");
+                    LOG.debug("Inheritable [" + currentDoc.getId() + "/" + currentDoc.getPathAsString() + "] executing inheritance...");
                 }
                 // Execute operation
                 InheritMetadataFromParentOperation op = new InheritMetadataFromParentOperation();
