@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<component name="org.athento.nuxeo.athento-nx-metadata-inheritance.formlayout-metadataInheritance"
+<component name="org.athento.nuxeo.athento-nx-metadata-inheritance.extended-config.formlayout-metadataInheritance"
 	version="1.0.0">
 	<require>org.nuxeo.runtime.started</require>
 
@@ -35,6 +35,12 @@
 						<property name="nxl_colspan_0">1</property>
 					</properties>
 					<widget>enableSiblingInheritance</widget>
+				</row>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>ignoreVersions</widget>
 				</row>
 			</rows>
 			<widget name="enableInheritance" type="checkbox">
@@ -71,6 +77,15 @@
 				<translated>true</translated>
 				<fields>
 					<field>metadataInheritanceConfig:enableSiblingInheritance</field>
+				</fields>
+			</widget>
+			<widget name="ignoreVersions" type="checkbox">
+				<labels>
+					<label mode="any">label.metadataInheritanceConfig.ignoreVersions</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field>metadataInheritanceConfig:ignoreVersions</field>
 				</fields>
 			</widget>
 		</layout>

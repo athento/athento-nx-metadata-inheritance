@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<component name="org.athento.nuxeo.athento-nx-metadata-inheritance.doctype"
+<component name="org.athento.nuxeo.athento-nx-metadata-inheritance.extended-config.doctype"
 	version="1.0.0">
 	<require>org.nuxeo.runtime.started</require>
 

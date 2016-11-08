@@ -2,17 +2,16 @@ package org.athento.nuxeo.listener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.athento.nuxeo.operations.InheritMetadataFromParentOperation;
+import org.athento.nuxeo.operations.InheritMetadataOperation;
+import org.athento.nuxeo.utils.InheritUtil;
 import org.nuxeo.ecm.core.api.*;
 import org.nuxeo.ecm.core.api.event.DocumentEventTypes;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
-import org.athento.nuxeo.operations.InheritMetadataFromParentOperation;
-import org.athento.nuxeo.operations.InheritMetadataOperation;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.core.versioning.VersioningService;
-import org.nuxeo.runtime.api.Framework;
-import org.athento.nuxeo.utils.InheritUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,12 +57,15 @@ public class InheritMetadataListener implements EventListener {
             }
             // Check document to know it it is container of other to start inheritance to its children
             if (parentDocumentMustBeApplied(currentDoc)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Inheritable [" + currentDoc.getId() + "/" + currentDoc.getPathAsString() + "] executing inheritance...");
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("Inheritable " + currentDoc.getId() + " executing inheritance...");
                 }
                 // Execute operation
                 InheritMetadataFromParentOperation op = new InheritMetadataFromParentOperation();
                 try {
+                    // Set ignore versions param
+                    boolean ignoreVersions = InheritUtil.readConfigValue(session, "metadataInheritanceConfig:ignoreVersions", true);
+                    op.setIgnoreVersions(ignoreVersions);
                     op.setSession(event.getContext().getCoreSession());
                     op.run(currentDoc);
                 } catch (Exception e) {
@@ -83,15 +85,28 @@ public class InheritMetadataListener implements EventListener {
                             if (inheritableParentId != null && !inheritableParentId.isEmpty()) {
                                 // Find first inheritable parent
                                 DocumentModel parentDoc = session.getDocument(new IdRef(inheritableParentId));
-                                // Update parent document with current document schemas
-                                InheritUtil.propagateSchemas(session, currentDoc, parentDoc, currentDoc.getSchemas(), ignoredMetadatas.split(","));
-                                // Increase version
-                                if (parentDoc.hasFacet(FacetNames.VERSIONABLE)) {
-                                    parentDoc.putContextData(VersioningService.VERSIONING_OPTION, VersioningOption.MINOR);
+                                // When update document only the updated metadata will be propagated
+                                if (currentDoc.hasSchema("inheritance")) {
+                                    String lastUpdatedMetadatas = (String) currentDoc.getPropertyValue("inheritance:lastUpdatedMetadatas");
+                                    if (LOG.isInfoEnabled()) {
+                                        LOG.info("Only propagate: " + lastUpdatedMetadatas);
+                                    }
+                                    if (lastUpdatedMetadatas != null && !lastUpdatedMetadatas.isEmpty()) {
+                                        String [] metadatas = lastUpdatedMetadatas.split(",");
+                                        // Propagate only last changed metadatas
+                                        InheritUtil.propagateMetadadas(session, currentDoc, parentDoc, metadatas, ignoredMetadatas.split(","));
+                                        // Increase version
+                                        if (parentDoc.hasFacet(FacetNames.VERSIONABLE)) {
+                                            parentDoc.putContextData(VersioningService.VERSIONING_OPTION, VersioningOption.MINOR);
+                                        }
+                                        session.saveDocument(parentDoc);
+                                    }
+                                } else {
+                                    LOG.warn("Inheritance metadata is not found into document inherited.");
                                 }
-                                session.saveDocument(parentDoc);
                             }
                         } else {
+                            LOG.info("No update parent for doc");
                             currentDoc.setPropertyValue("inherit:updateParent", true);
                             ignoredForUpdates.add(currentDoc);
                             session.saveDocument(currentDoc);
@@ -106,6 +121,7 @@ public class InheritMetadataListener implements EventListener {
                     // Execute operation
                     InheritMetadataOperation op = new InheritMetadataOperation();
                     try {
+                        op.setCreation(true);
                         op.setSession(event.getContext().getCoreSession());
                         op.setParamIgnoreMetadatas(ignoredMetadatas);
                         // FIX: Add only schemas here if it is necessary
