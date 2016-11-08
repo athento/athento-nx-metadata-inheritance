@@ -7,6 +7,7 @@ import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
+import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -27,6 +28,11 @@ public class InheritMetadataFromParentOperation {
     @Context
     protected CoreSession session;
 
+    /**
+     * Ignore version in propagation.
+     */
+    @Param(name = "ignoreVersions", required = false)
+    private boolean ignoreVersions = true;
 
     /**
      * Run operation.
@@ -50,7 +56,7 @@ public class InheritMetadataFromParentOperation {
         }
 
         // Find children with facet "inheritor"
-        DocumentModelList inheritorDocs = getChildren(doc);
+        DocumentModelList inheritorDocs = getChildren(doc, ignoreVersions);
 
         // Get ignored metadatas
         String ignoredMetadatas = InheritUtil.readConfigValue(session, "metadataInheritanceConfig:ignoredMetadatas", "");
@@ -59,6 +65,7 @@ public class InheritMetadataFromParentOperation {
             // Execute operation
             InheritMetadataOperation op = new InheritMetadataOperation();
             try {
+                op.setCreation(false);
                 op.setSession(session);
                 op.setParamIgnoreMetadatas(ignoredMetadatas);
                 op.run(inheritorDoc);
@@ -84,17 +91,29 @@ public class InheritMetadataFromParentOperation {
     /**
      * Get children (query TREE mode).
      *
+     * @param doc is the parent document
+     * @param ignoreVersions to ignore child document as version
      * @return document list
      */
-    private DocumentModelList getChildren(DocumentModel doc) {
+    private DocumentModelList getChildren(DocumentModel doc, boolean ignoreVersions) {
         String NXQL = String.format("SELECT * FROM Document WHERE " +
                 "ecm:mixinType = 'inheritor' AND ecm:path STARTSWITH '%s' AND " +
-                "ecm:currentLifeCycleState != 'deleted'", doc.getPathAsString());
+                "ecm:currentLifeCycleState != 'deleted' AND ecm:mixinType != 'HiddenInNavigation'" +
+                (ignoreVersions ? " AND ecm:isProxy = 0 AND ecm:isCheckedInVersion = 0" :  ""), doc.getPathAsString());
         return session.query(NXQL);
     }
 
     public void setSession(CoreSession session) {
         this.session = session;
+    }
+
+    /**
+     * Set ignore versions param.
+     *
+     * @param ignoreVersions
+     */
+    public void setIgnoreVersions(boolean ignoreVersions) {
+        this.ignoreVersions = ignoreVersions;
     }
 
     /** Log. */

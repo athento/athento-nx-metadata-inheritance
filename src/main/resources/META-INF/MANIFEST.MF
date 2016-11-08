@@ -4,7 +4,8 @@ Bundle-Vendor: Nuxeo
 Bundle-Version: 1.0.0
 Bundle-Name: org.athento.nuxeo.metadata.inheritance
 Bundle-ManifestVersion: 2
-Nuxeo-Component: OSGI-INF/widgettypes-contrib.xml,
+Nuxeo-Component: OSGI-INF/schemas-contrib.xml,
+ OSGI-INF/widgettypes-contrib.xml,
  OSGI-INF/operations-contrib.xml,
  OSGI-INF/chains-contrib.xml,
  OSGI-INF/actions-contrib.xml,

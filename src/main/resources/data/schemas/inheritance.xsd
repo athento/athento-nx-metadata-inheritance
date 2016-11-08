@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:nxs="http://www.athento.com/ecm/schemas/athento/automationExtendedConfig"
-	targetNamespace="http://www.athento.com/ecm/schemas/athento/automationExtendedConfig">
+	xmlns:nxs="http://www.athento.com/ecm/schemas/athento/inheritance"
+	targetNamespace="http://www.athento.com/ecm/schemas/athento/inheritance">
 	<!-- helper XSD definitions for list types -->
 	<xs:complexType name="content">
 		<xs:sequence>
@@ -36,13 +36,6 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<!-- Extended Config: Inheritance Config -->
-	
-	<!-- defaultDestinationPath -->
-	<xs:element name="ignoredMetadatas" type="xs:string" default=""/>
-	<xs:element name="propagateNullValues" type="xs:boolean" default="false" />
-	<xs:element name="enableSiblingInheritance" type="xs:boolean" default="false" />
-	<xs:element name="enableInheritance" type="xs:boolean" default="true" />
-	<xs:element name="ignoreVersions" type="xs:boolean" default="true" />
+	<xs:element name="lastUpdatedMetadatas" type="xs:string" default=""/>
 
 </xs:schema>

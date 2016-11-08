@@ -57,6 +57,27 @@ public final class InheritUtil {
     }
 
     /**
+     * Propagate metadatas.
+     *
+     * @param session
+     * @param origin
+     * @param destiny
+     * @param metadatas
+     * @param ignoredMetadatas
+     */
+    public static void propagateMetadadas(CoreSession session, DocumentModel origin, DocumentModel destiny, String[] metadatas, String[] ignoredMetadatas) {
+        for (String metadata : metadatas) {
+            if (!metadataMustBeIgnored(metadata, ignoredMetadatas)) {
+                Object value = origin.getPropertyValue(metadata);
+                if (allowToSaveValue(session, metadata, value)) {
+                    // Update property of destiny document
+                    updateProperty(destiny, metadata, value);
+                }
+            }
+        }
+    }
+
+    /**
      * Check if null value of metadata must be propagated using Extendedconfig property.
      * <i>From #AT-921</i>
      *
@@ -174,4 +195,5 @@ public final class InheritUtil {
         }
         return ignore;
     }
+
 }

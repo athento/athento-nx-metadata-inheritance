@@ -44,6 +44,12 @@ public class InheritMetadataOperation {
     protected String paramIgnoreMetadatas;
 
     /**
+     * Inherit metadata for create new document.
+     */
+    @Param(name = "creation", required = false)
+    private boolean creation = true;
+
+    /**
      * Param schemas.
      */
     private String[] schemas;
@@ -87,17 +93,31 @@ public class InheritMetadataOperation {
 
         LOG.info("Parent inheritable " + parent.getId() + ", " + parent.getName());
 
-        // Get schemas from param
-        this.schemas = getSchemasFromParam();
-        if (this.schemas == null) {
-            this.schemas = parent.getSchemas();
-        }
-
         // Get ignored from param metadata
         this.ignoredMetadatas = getIgnoredMetadatasFromParam();
 
-        // Propagate schemas from parent to child
-        InheritUtil.propagateSchemas(session, parent, doc, this.schemas, this.ignoredMetadatas);
+        if (creation) {
+            // Get schemas from param in creation mode
+            this.schemas = getSchemasFromParam();
+            if (this.schemas == null) {
+                this.schemas = parent.getSchemas();
+            }
+            // Propagate schemas from parent to child
+            InheritUtil.propagateSchemas(session, parent, doc, this.schemas, this.ignoredMetadatas);
+        } else {
+            // When update document only updated metadatas will be propagated
+            if (doc.hasSchema("inheritance")) {
+                String lastUpdatedMetadatas = (String) parent.getPropertyValue("inheritance:lastUpdatedMetadatas");
+                LOG.info("Only Update metadatas " + lastUpdatedMetadatas);
+                if (lastUpdatedMetadatas != null && !lastUpdatedMetadatas.isEmpty()) {
+                    String [] metadatas = lastUpdatedMetadatas.split(",");
+                    // Propagate only last changed metadatas
+                    InheritUtil.propagateMetadadas(session, parent, doc, metadatas, this.ignoredMetadatas);
+                }
+            } else {
+                LOG.warn("Inheritance metadata is not found into document inherited.");
+            }
+        }
 
         // Add parentId of inherit schema with parent Id
         InheritUtil.updateProperty(doc, "inherit:parentId", parent.getId());
@@ -183,5 +203,14 @@ public class InheritMetadataOperation {
 
     public void setSession(CoreSession session) {
         this.session = session;
+    }
+
+    /**
+     * Inheritance after creation.
+     *
+     * @param creation (or update with false value)
+     */
+    public void setCreation(boolean creation) {
+        this.creation = creation;
     }
 }
