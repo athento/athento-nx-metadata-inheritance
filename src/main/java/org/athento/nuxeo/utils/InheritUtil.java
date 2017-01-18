@@ -25,7 +25,7 @@ public final class InheritUtil {
      * IGNORED SCHEMAS.
      */
     public static String[] DEFAULT_IGNORED_SCHEMAS = { "dublincore", "common",
-        "uid", "file", "files" };
+        "uid", "file", "files", "athentoRelation" };
 
     /**
      * Propagate schemas.
