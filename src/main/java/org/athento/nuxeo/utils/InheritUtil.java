@@ -47,12 +47,17 @@ public final class InheritUtil {
                     for (Map.Entry<String, Object> entry : properties
                         .entrySet()) {
                         String metadata = entry.getKey();
-                        if (!metadataMustBeIgnored(metadata, ignoredMetadatas)) {
-                            Object value = origin.getPropertyValue(metadata);
-                            // From #AT-921
-                            if (allowToSaveValue(session, metadata, value)) {
-                                // Update property of destiny document
-                                updateProperty(destiny, metadata, value);
+                        String lastUpdatedMetadatas = (String) destiny.getPropertyValue("inheritance:lastUpdatedMetadatas");
+                        if (lastUpdatedMetadatas == null
+                                || lastUpdatedMetadatas.isEmpty()
+                                || !lastUpdatedMetadatas.contains(metadata)) {
+                            if (!metadataMustBeIgnored(metadata, ignoredMetadatas)) {
+                                Object value = origin.getPropertyValue(metadata);
+                                // From #AT-921
+                                if (allowToSaveValue(session, metadata, value)) {
+                                    // Update property of destiny document
+                                    updateProperty(destiny, metadata, value);
+                                }
                             }
                         }
                     }

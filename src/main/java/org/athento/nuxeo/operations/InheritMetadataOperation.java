@@ -108,7 +108,7 @@ public class InheritMetadataOperation {
             // When update document only updated metadatas will be propagated
             if (doc.hasSchema("inheritance")) {
                 String lastUpdatedMetadatas = (String) parent.getPropertyValue("inheritance:lastUpdatedMetadatas");
-                LOG.info("Only Update metadatas " + lastUpdatedMetadatas);
+                LOG.info("Only Update metadatas = " + lastUpdatedMetadatas);
                 if (lastUpdatedMetadatas != null && !lastUpdatedMetadatas.isEmpty()) {
                     String [] metadatas = lastUpdatedMetadatas.split(",");
                     // Propagate only last changed metadatas
