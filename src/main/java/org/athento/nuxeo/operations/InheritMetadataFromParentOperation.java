@@ -65,7 +65,6 @@ public class InheritMetadataFromParentOperation {
             // Execute operation
             InheritMetadataOperation op = new InheritMetadataOperation();
             try {
-                op.setCreation(false);
                 op.setSession(session);
                 op.setParamIgnoreMetadatas(ignoredMetadatas);
                 op.run(inheritorDoc);

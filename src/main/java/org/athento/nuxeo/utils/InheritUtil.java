@@ -2,13 +2,16 @@ package org.athento.nuxeo.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.ecm.automation.AutomationService;
+import org.nuxeo.ecm.automation.OperationContext;
+import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.model.Property;
+import org.nuxeo.runtime.api.Framework;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by victorsanchez on 3/6/16.
@@ -25,7 +28,7 @@ public final class InheritUtil {
      * IGNORED SCHEMAS.
      */
     public static String[] DEFAULT_IGNORED_SCHEMAS = { "dublincore", "common",
-        "uid", "file", "files", "athentoRelation" };
+        "uid", "file", "files", "athentoRelation", "inherit", "inheritance" };
 
     /**
      * Propagate schemas.
@@ -33,10 +36,15 @@ public final class InheritUtil {
      * @param origin
      * @param destiny
      * @param schemas
+     * @param ignoredMetadatas
+     * @param onlyEmpty if propagate only to empty properties
      */
     public static void propagateSchemas(CoreSession session,
         DocumentModel origin, DocumentModel destiny, String[] schemas,
-        String[] ignoredMetadatas) {
+        String[] ignoredMetadatas, boolean onlyEmpty) {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Propagating from " + origin.getRef() + " to " + destiny.getRef());
+        }
         // Propagate schemas
         for (String schema : schemas) {
             if (documentsHaveSchema(origin, destiny, schema)) {
@@ -47,15 +55,14 @@ public final class InheritUtil {
                     for (Map.Entry<String, Object> entry : properties
                         .entrySet()) {
                         String metadata = entry.getKey();
-                        String lastUpdatedMetadatas = (String) destiny.getPropertyValue("inheritance:lastUpdatedMetadatas");
-                        if (lastUpdatedMetadatas == null
-                                || lastUpdatedMetadatas.isEmpty()
-                                || !lastUpdatedMetadatas.contains(metadata)) {
-                            if (!metadataMustBeIgnored(metadata, ignoredMetadatas)) {
-                                Object value = origin.getPropertyValue(metadata);
-                                // From #AT-921
-                                if (allowToSaveValue(session, metadata, value)) {
-                                    // Update property of destiny document
+                        if (!metadataMustBeIgnored(metadata, ignoredMetadatas)) {
+                            Object value = origin.getPropertyValue(metadata);
+                            // From #AT-921
+                            if (allowToSaveValue(session, metadata, value)) {
+                                // Update property of destiny document
+                                Object propValue = destiny.getPropertyValue(metadata);
+                                LOG.info("Propagating metadata " + metadata + ": " + propValue + " with " + value);
+                                if (!onlyEmpty || propValue == null || propValue.toString().isEmpty()) {
                                     updateProperty(destiny, metadata, value);
                                 }
                             }
@@ -75,13 +82,15 @@ public final class InheritUtil {
      * @param metadatas
      * @param ignoredMetadatas
      */
-    public static void propagateMetadadas(CoreSession session, DocumentModel origin, DocumentModel destiny, String[] metadatas, String[] ignoredMetadatas) {
+    public static void propagateMetadatas(CoreSession session, DocumentModel origin, DocumentModel destiny, String[] metadatas, String[] ignoredMetadatas) {
+        List<String> updatedMetadatas = new ArrayList<String>();
         for (String metadata : metadatas) {
             if (!metadataMustBeIgnored(metadata, ignoredMetadatas)) {
                 Object value = origin.getPropertyValue(metadata);
                 if (allowToSaveValue(session, metadata, value)) {
                     // Update property of destiny document
                     updateProperty(destiny, metadata, value);
+                    updatedMetadatas.add(metadata);
                 }
             }
         }
@@ -158,8 +167,8 @@ public final class InheritUtil {
     public static DocumentModel updateProperty(DocumentModel doc, String xpath,
         Object value) {
         Property p = doc.getProperty(xpath);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(" updating doc [" + doc.getPathAsString()
+        if (LOG.isInfoEnabled()) {
+            LOG.info(" updating doc [" + doc.getPathAsString()
                 + "] property [" + xpath + "] with value [" + value + "]");
         }
         p.setValue(value);
@@ -223,6 +232,50 @@ public final class InheritUtil {
             }
         }
         return ignore;
+    }
+
+    /**
+     * Run operation.
+     *
+     * @param operationId
+     * @param input
+     * @param params
+     * @param session
+     * @return
+     * @throws OperationException
+     */
+    public static Object runOperation(String operationId, Object input,
+                                      Map<String, Object> params, CoreSession session)
+            throws OperationException {
+        AutomationService automationManager = Framework
+                .getLocalService(AutomationService.class);
+        // Input setting
+        OperationContext ctx = new OperationContext(session);
+        ctx.setInput(input);
+        Object o = null;
+        try {
+            // Run Automation service
+            o = automationManager.run(ctx, operationId, params);
+        } catch (Exception e) {
+            LOG.error("Unable to run operation: " + operationId
+                    + " Exception: " + e.getMessage(), e);
+            new OperationException(e);
+        }
+        return o;
+    }
+
+    /**
+     * Transform string list to comma-separated values.
+     *
+     * @param properties
+     * @return
+     */
+    public static String stringfy(List<String> properties) {
+        StringBuffer str = new StringBuffer();
+        for (Iterator<String> it = properties.iterator(); it.hasNext();) {
+            str.append(it.next() + (it.hasNext() ? "," : ""));
+        }
+        return str.toString();
     }
 
 }

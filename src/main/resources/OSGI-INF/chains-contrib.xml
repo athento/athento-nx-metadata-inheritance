@@ -20,4 +20,15 @@
     </extension>
 
 
+    <extension target="org.nuxeo.ecm.core.work.service" point="queues">
+        <queue id="inheritQueue">
+            <name>Inheritance</name>
+            <maxThreads>${inheritance.maxThreads:=4}</maxThreads>
+            <category>inheritance</category>
+            <clearCompletedAfterSeconds>${inheritance.clearCompletedAfterSeconds:=90}</clearCompletedAfterSeconds>
+        </queue>
+    </extension>
+
+
+
 </component>
