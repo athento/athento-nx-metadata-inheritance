@@ -62,6 +62,10 @@ public class InheritMetadataFromParentOperation {
         String ignoredMetadatas = InheritUtil.readConfigValue(session, "metadataInheritanceConfig:ignoredMetadatas", "");
 
         for (DocumentModel inheritorDoc : inheritorDocs) {
+            if (InheritUtil.hasRelation(inheritorDoc)) {
+                LOG.info("Document " + inheritorDoc.getRef() + " has a relation");
+                continue;
+            }
             // Execute operation
             InheritMetadataOperation op = new InheritMetadataOperation();
             try {

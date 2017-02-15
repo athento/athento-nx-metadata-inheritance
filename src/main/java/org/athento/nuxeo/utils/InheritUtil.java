@@ -278,4 +278,17 @@ public final class InheritUtil {
         return str.toString();
     }
 
+    /**
+     * Check if document has a relation with destiny doc.
+     *
+     * @param doc
+     * @return
+     */
+    public static boolean hasRelation(DocumentModel doc) {
+        if (doc.hasSchema("athentoRelation")) {
+            return doc.getPropertyValue("athentoRelation:destinyDoc") != null;
+        }
+        return false;
+    }
+
 }

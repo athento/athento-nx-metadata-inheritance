@@ -91,26 +91,28 @@ public class InheritMetadataListener implements PostCommitFilteringEventListener
                             LOG.info("Sibling is enabled: inheritor " + currentDoc.getId() + " updated, check updated parent...");
                         }
                         // Check update parent
-                        if (updateInheritableParent(currentDoc)) {
-                            String inheritableParentId = (String) currentDoc.getPropertyValue("inherit:parentId");
-                            if (inheritableParentId != null && !inheritableParentId.isEmpty()) {
-                                // Find first inheritable parent
-                                DocumentModel parentDoc = session.getDocument(new IdRef(inheritableParentId));
-                                // When update document only the updated metadata will be propagated
-                                if (currentDoc.hasSchema("inheritance")) {
-                                    if (LOG.isInfoEnabled()) {
-                                        LOG.info("Propagate all allowed schemas: " + parentDoc.getRef());
+                        if (!InheritUtil.hasRelation(currentDoc)) {
+                            if (updateInheritableParent(currentDoc)) {
+                                String inheritableParentId = (String) currentDoc.getPropertyValue("inherit:parentId");
+                                if (inheritableParentId != null && !inheritableParentId.isEmpty()) {
+                                    // Find first inheritable parent
+                                    DocumentModel parentDoc = session.getDocument(new IdRef(inheritableParentId));
+                                    // When update document only the updated metadata will be propagated
+                                    if (currentDoc.hasSchema("inheritance")) {
+                                        if (LOG.isInfoEnabled()) {
+                                            LOG.info("Propagate all allowed schemas: " + parentDoc.getRef());
+                                        }
+                                        // Propagate all allowed parent schemas
+                                        InheritUtil.propagateSchemas(session, currentDoc, parentDoc, parentDoc.getSchemas(), ignoredMetadatas.split(","), false);
+                                        // Increase version
+                                        if (parentDoc.hasFacet(FacetNames.VERSIONABLE)) {
+                                            parentDoc.putContextData(VersioningService.VERSIONING_OPTION, VersioningOption.MINOR);
+                                        }
+                                        // Save parent doc
+                                        session.saveDocument(parentDoc);
+                                    } else {
+                                        LOG.warn("Inheritance metadata is not found into document inherited.");
                                     }
-                                    // Propagate all allowed parent schemas
-                                    InheritUtil.propagateSchemas(session, currentDoc, parentDoc, parentDoc.getSchemas(), ignoredMetadatas.split(","), false);
-                                    // Increase version
-                                    if (parentDoc.hasFacet(FacetNames.VERSIONABLE)) {
-                                        parentDoc.putContextData(VersioningService.VERSIONING_OPTION, VersioningOption.MINOR);
-                                    }
-                                    // Save parent doc
-                                    session.saveDocument(parentDoc);
-                                } else {
-                                    LOG.warn("Inheritance metadata is not found into document inherited.");
                                 }
                             }
                         }
