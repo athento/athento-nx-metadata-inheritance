@@ -174,9 +174,20 @@
 
     <pluginRepositories>
         <pluginRepository>
-            <id>public</id>
+            <id>public-nuxeo</id>
             <url>http://maven.nuxeo.org/nexus/content/groups/public</url>
             <name>Nuxeo releases</name>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>public-athento</id>
+            <url>http://maven2.yerbabuena.es/artifactory/athento-public</url>
+            <name>Athento Plugin releases</name>
             <releases>
                 <enabled>true</enabled>
             </releases>
