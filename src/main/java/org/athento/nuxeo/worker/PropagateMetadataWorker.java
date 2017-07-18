@@ -58,7 +58,7 @@ public class PropagateMetadataWorker extends AbstractWork {
 	}
 
 	@Override
-	public void work() throws Exception {
+	public void work() {
         if (LOG.isInfoEnabled()) {
             LOG.info("Starting inherit worker...");
         }

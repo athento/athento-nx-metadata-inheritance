@@ -63,7 +63,7 @@ public class PropagateMetadataFromParentWorker extends AbstractWork {
 	}
 
 	@Override
-	public void work() throws Exception {
+	public void work() {
         if (LOG.isInfoEnabled()) {
             LOG.info("Starting inherit parent worker...");
         }
@@ -82,6 +82,8 @@ public class PropagateMetadataFromParentWorker extends AbstractWork {
 			op.setSession(session);
 			DocumentModel doc = session.getDocument(new IdRef(docId));
 			op.run(doc);
+		} catch (Exception e) {
+			LOG.error("Unable to execute propagate metadata from parent", e);
 		} finally {
 			commitOrRollbackTransaction();
 			startTransaction();
