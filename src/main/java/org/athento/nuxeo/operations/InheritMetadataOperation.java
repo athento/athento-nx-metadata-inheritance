@@ -99,9 +99,9 @@ public class InheritMetadataOperation {
         InheritUtil.propagateSchemas(session, parent, doc, this.schemas, this.ignoredMetadatas, true);
 
         // Add parentId of inherit schema with parent Id
-        InheritUtil.updateProperty(doc, "inherit:parentId", parent.getId());
+        InheritUtil.updateProperty(doc, "inheritance:parentId", parent.getId());
         // Refresh update parent metadata to modify inheritable always
-        InheritUtil.updateProperty(doc, "inherit:updateParent", true);
+        InheritUtil.updateProperty(doc, "inheritance:updateParent", true);
 
         return doc;
     }

@@ -37,5 +37,7 @@
 	</xs:complexType>
 
 	<xs:element name="lastUpdatedMetadatas" type="xs:string" default=""/>
+	<xs:element name="updateParent" type="xs:boolean"/>
+	<xs:element name="parentId" type="xs:string"/>
 
 </xs:schema>

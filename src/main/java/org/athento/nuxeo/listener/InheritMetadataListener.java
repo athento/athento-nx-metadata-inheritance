@@ -93,7 +93,7 @@ public class InheritMetadataListener implements PostCommitFilteringEventListener
                         // Check update parent
                         if (!InheritUtil.hasRelation(currentDoc)) {
                             if (updateInheritableParent(currentDoc)) {
-                                String inheritableParentId = (String) currentDoc.getPropertyValue("inherit:parentId");
+                                String inheritableParentId = (String) currentDoc.getPropertyValue("inheritance:parentId");
                                 if (inheritableParentId != null && !inheritableParentId.isEmpty()) {
                                     // Find first inheritable parent
                                     DocumentModel parentDoc = session.getDocument(new IdRef(inheritableParentId));
@@ -165,8 +165,8 @@ public class InheritMetadataListener implements PostCommitFilteringEventListener
         // By default, always update "inheritable" parent document
         boolean updateParent = true;
         // Check if inheritor document must be update inheritable parent document
-        if (doc.getPropertyValue("inherit:updateParent") != null) {
-            updateParent = (Boolean) doc.getPropertyValue("inherit:updateParent");
+        if (doc.getPropertyValue("inheritance:updateParent") != null) {
+            updateParent = (Boolean) doc.getPropertyValue("inheritance:updateParent");
         }
         return updateParent;
     }

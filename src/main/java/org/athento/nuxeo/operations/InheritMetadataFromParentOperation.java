@@ -74,7 +74,7 @@ public class InheritMetadataFromParentOperation {
                 op.run(inheritorDoc);
                 // Set updateParent to false for children modification. It does document modification
                 // ignores parent "inheritable" modification.
-                inheritorDoc.setPropertyValue("inherit:updateParent", false);
+                inheritorDoc.setPropertyValue("inheritance:updateParent", false);
                 // Increase version
                 if (inheritorDoc.hasFacet(FacetNames.VERSIONABLE)) {
                     inheritorDoc.putContextData(VersioningService.VERSIONING_OPTION, VersioningOption.MINOR);
@@ -87,7 +87,6 @@ public class InheritMetadataFromParentOperation {
 
         return doc;
     }
-
 
     
     
