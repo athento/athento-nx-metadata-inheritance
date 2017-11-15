@@ -59,12 +59,12 @@ public class PropagateMetadataWorker extends AbstractWork {
 
 	@Override
 	public void work() {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Starting inherit worker...");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Starting inherit worker...");
         }
-		initSession();
+		openSystemSession();
 		if (!session.exists(new IdRef(docId))) {
-            LOG.info("Document " + docId + " is not found for inheritance.");
+            LOG.trace("Document " + docId + " is not found for inheritance.");
 			setStatus("Nothing to process");
 			return;
 		}
@@ -83,7 +83,7 @@ public class PropagateMetadataWorker extends AbstractWork {
                 // Save document
                 session.saveDocument(doc);
 			} catch (Exception e) {
-				throw new ClientException("Unable to execute inherit worker", e);
+				LOG.error("Problems executing inherit worker", e);
 			}
 		} finally {
 			commitOrRollbackTransaction();

@@ -64,10 +64,10 @@ public class PropagateMetadataFromParentWorker extends AbstractWork {
 
 	@Override
 	public void work() {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Starting inherit parent worker...");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Starting inherit parent worker...");
         }
-		initSession();
+		openSystemSession();
 		if (!session.exists(new IdRef(docId))) {
 			setStatus("Nothing to process");
 			return;
