@@ -31,10 +31,9 @@ public class InheritMetadataListener implements PostCommitFilteringEventListener
      * Handle event.
      *
      * @param events
-     * @throws ClientException
      */
     @Override
-    public void handleEvent(EventBundle events) throws ClientException {
+    public void handleEvent(EventBundle events) {
         for (Event event : events) {
             if (acceptEvent(event)) {
                 handleEvent(event);

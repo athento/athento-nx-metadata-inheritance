@@ -55,14 +55,18 @@ public final class InheritUtil {
                     for (Map.Entry<String, Object> entry : properties
                         .entrySet()) {
                         String metadata = entry.getKey();
+                        LOG.info("Metadata to propagate " + metadata);
                         if (!metadataMustBeIgnored(metadata, ignoredMetadatas)) {
                             Object value = origin.getPropertyValue(metadata);
+                            LOG.info("Value to propagate " + value);
                             // From #AT-921
                             if (allowToSaveValue(session, metadata, value)) {
                                 // Update property of destiny document
                                 Object propValue = destiny.getPropertyValue(metadata);
-                                LOG.info("Propagating metadata " + metadata + ": " + propValue + " with " + value);
-                                if (!onlyEmpty || propValue == null || propValue.toString().isEmpty()) {
+                                if (LOG.isInfoEnabled()) {
+                                    LOG.info("Propagating metadata " + metadata + ": " + propValue + " with " + value);
+                                }
+                                if (!onlyEmpty || checkEmpty(propValue)) {
                                     updateProperty(destiny, metadata, value);
                                 }
                             }
@@ -71,6 +75,25 @@ public final class InheritUtil {
                 }
             }
         }
+    }
+
+    /**
+     * Check empty metadataValue.
+     *
+     * @param metadataValue
+     * @return
+     */
+    private static boolean checkEmpty(Object metadataValue) {
+        if (metadataValue == null) {
+            return true;
+        }
+        if (metadataValue instanceof String) {
+            return "null".equals(metadataValue)
+                    || ((String) metadataValue).isEmpty();
+        } else if (metadataValue instanceof Collection) {
+            return ((Collection) metadataValue).isEmpty();
+        }
+        return false;
     }
 
     /**
@@ -107,8 +130,7 @@ public final class InheritUtil {
     private static boolean allowToSaveValue(CoreSession session,
         String metadata, Object value) {
         boolean retVal;
-        if (value != null && !"null".equals(value)
-            && !String.valueOf(value).isEmpty()) {
+        if (!checkEmpty(value)) {
             retVal = true;
         } else {
             retVal = InheritUtil.readConfigValue(session,
