@@ -84,7 +84,9 @@ public class InheritMetadataOperation {
                     + "'inheritable' for the document " + doc.getId());
         }
 
-        LOG.info("Parent inheritable " + parent.getId() + ", " + parent.getName());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Parent inheritable " + parent.getId() + ", " + parent.getName());
+        }
 
         // Get ignored from param metadata
         this.ignoredMetadatas = getIgnoredMetadatasFromParam();
@@ -95,8 +97,11 @@ public class InheritMetadataOperation {
             this.schemas = parent.getSchemas();
         }
 
+        // Get property to check override
+        Boolean overrideEmpty = InheritUtil.readConfigValue(session, "metadataInheritanceConfig:overrideValues", true);
+
         // Propagate schemas from parent to child (only empty properties of document)
-        InheritUtil.propagateSchemas(session, parent, doc, this.schemas, this.ignoredMetadatas, true);
+        InheritUtil.propagateSchemas(session, parent, doc, this.schemas, this.ignoredMetadatas, !overrideEmpty);
 
         // Add parentId of inherit schema with parent Id
         InheritUtil.updateProperty(doc, "inheritance:parentId", parent.getId());

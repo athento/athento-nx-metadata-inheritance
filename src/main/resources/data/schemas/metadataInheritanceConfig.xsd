@@ -44,5 +44,6 @@
 	<xs:element name="enableSiblingInheritance" type="xs:boolean" default="false" />
 	<xs:element name="enableInheritance" type="xs:boolean" default="true" />
 	<xs:element name="ignoreVersions" type="xs:boolean" default="true" />
+	<xs:element name="overrideValues" type="xs:boolean" default="true" />
 
 </xs:schema>
