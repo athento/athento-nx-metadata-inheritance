@@ -59,8 +59,8 @@ public class PropagateMetadataWorker extends AbstractWork {
 
 	@Override
 	public void work() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Starting inherit worker...");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Starting inherit worker...");
         }
 		openSystemSession();
 		if (!session.exists(new IdRef(docId))) {
