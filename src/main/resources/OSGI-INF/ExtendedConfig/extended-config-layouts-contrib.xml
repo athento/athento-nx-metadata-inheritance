@@ -42,6 +42,12 @@
 					</properties>
 					<widget>ignoreVersions</widget>
 				</row>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>propagateOnlyEmpty</widget>
+				</row>
 			</rows>
 			<widget name="enableInheritance" type="checkbox">
 				<labels>
@@ -86,6 +92,15 @@
 				<translated>true</translated>
 				<fields>
 					<field>metadataInheritanceConfig:ignoreVersions</field>
+				</fields>
+			</widget>
+			<widget name="propagateOnlyEmpty" type="checkbox">
+				<labels>
+					<label mode="any">label.metadataInheritanceConfig.propagateOnlyEmpty</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field>metadataInheritanceConfig:propagateOnlyEmpty</field>
 				</fields>
 			</widget>
 		</layout>

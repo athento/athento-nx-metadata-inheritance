@@ -95,8 +95,9 @@ public class InheritMetadataOperation {
             this.schemas = parent.getSchemas();
         }
 
-        // Propagate schemas from parent to child (only empty properties of document)
-        InheritUtil.propagateSchemas(session, parent, doc, this.schemas, this.ignoredMetadatas, true);
+        boolean onlyEmpty = InheritUtil.readConfigValue(session, "metadataInheritanceConfig:propagateOnlyEmpty", false);
+        // Propagate schemas from parent to child
+        InheritUtil.propagateSchemas(session, parent, doc, this.schemas, this.ignoredMetadatas, onlyEmpty);
 
         // Add parentId of inherit schema with parent Id
         InheritUtil.updateProperty(doc, "inherit:parentId", parent.getId());
