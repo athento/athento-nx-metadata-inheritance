@@ -9,6 +9,7 @@
 		point="schema">
 
 		<schema name="inheritance" prefix="inheritance" src="data/schemas/inheritance.xsd" />
+		<schema name="inherit" prefix="inherit" src="data/schemas/inherit.xsd" />
 
 	</extension>
 
