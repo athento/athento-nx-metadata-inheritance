@@ -48,6 +48,12 @@
 					</properties>
 					<widget>overrideValues</widget>
 				</row>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>increaseVersion</widget>
+				</row>
 			</rows>
 			<widget name="enableInheritance" type="checkbox">
 				<labels>
@@ -101,6 +107,15 @@
 				<translated>true</translated>
 				<fields>
 					<field>metadataInheritanceConfig:overrideValues</field>
+				</fields>
+			</widget>
+			<widget name="increaseVersion" type="checkbox">
+				<labels>
+					<label mode="any">label.metadataInheritanceConfig.increaseVersion</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field>metadataInheritanceConfig:increaseVersion</field>
 				</fields>
 			</widget>
 		</layout>

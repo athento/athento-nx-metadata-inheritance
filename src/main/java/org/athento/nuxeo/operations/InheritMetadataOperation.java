@@ -85,7 +85,7 @@ public class InheritMetadataOperation {
         }
 
         if (LOG.isInfoEnabled()) {
-            LOG.info("Parent inheritable " + parent.getId() + ", " + parent.getName());
+            LOG.info("Inherit metadata for " + doc.getId() + " from Parent inheritable " + parent.getId() + ", " + parent.getName());
         }
 
         // Get ignored from param metadata

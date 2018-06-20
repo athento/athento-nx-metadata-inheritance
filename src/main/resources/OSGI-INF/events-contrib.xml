@@ -3,6 +3,7 @@
 <component name="org.athento.nuxeo.metadata.inheritance.events" version="1.0.0">
 
     <require>org.nuxeo.runtime.started</require>
+    <require>org.nuxeo.ecm.platform.thumbnail.listener</require>
 
     <extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
                point="listener">
